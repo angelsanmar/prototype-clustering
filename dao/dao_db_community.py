@@ -13,7 +13,7 @@ class DAO_db_community(DAO):
     def __init__(self, route="mongodb://localhost:27017"):
         """
         :Parameters:
-            route: mongodb address, Default value: mongodb://localhost:27017>
+            route: mongodb address, Default value: mongodb://localhost:27017
         """
         super().__init__(route)
         self.mongo = MongoClient(self.route)
@@ -28,7 +28,6 @@ class DAO_db_community(DAO):
             communityId: Community id, Type: <class 'str'>
         """
         response = self.db_communities.delete_one({'id': communityId})
-        return response
 
     def insertCommunity(self, communityJSON):
         """
@@ -37,12 +36,11 @@ class DAO_db_community(DAO):
         """
         temp = copy(communityJSON)
         response = self.db_communities.insert_one(temp)
-        return response
 
     def getCommunities(self):
         """
         :Return:
-            Communities, Type: list(<class 'dict'>)
+            Communities, Type: List[<class 'dict'>]
         """
         data = self.db_communities.find({}, {"_id": 0})
         return loads(dumps(list(data)))
@@ -65,7 +63,7 @@ class DAO_db_community(DAO):
         :Parameters:
             communityId: Community id, Type: <class 'str'>
         :Return:
-            Community users, Type: list(<class 'dict'>)
+            Community users, Type: list[<class 'dict'>]
         """
         data = self.db_communities.find({"id": communityId}, {"users": 1, "_id": 0})
         return loads(dumps(list(data)))[0]
@@ -74,13 +72,14 @@ class DAO_db_community(DAO):
         """
         :Parameters:
             communityId: Community id, Type: <class 'str'>
-            newUserId: user, Type: <class 'dict'>
+            newUser: user, Type: <class 'dict'>
         """
+        user = copy(newUser)
         response = self.db_communities.update_one(
             {"id": communityId},
             {
                 "$push": {
-                    "users": newUser
+                    "users": user
                 }
             }
         )
@@ -102,15 +101,19 @@ class DAO_db_community(DAO):
             communityId: Community id, Type: <class 'str'>
             newValue: explanation, Type: <class 'str'>
         """
+        value = copy(newValue)
         response = self.db_communities.update_one(
             {"id": communityId},
             {
                 "$set": {
-                    "explanation": newValue
+                    "explanation": value
                 }
             }
         )
         return response
 
     def drop(self):
+        """
+            Mongo DB Drop Collection
+        """
         self.db_communities.drop()

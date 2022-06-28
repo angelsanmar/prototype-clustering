@@ -14,14 +14,14 @@ class Test_db_users(unittest.TestCase):
 
     def setUp(self):
         self.dao = DAO_db_users()
+
+
+    def tearDown(self):
         # self.dao.drop()
         self.dao.deleteUser("001")
         self.dao.deleteUser("002")
         self.dao.deleteUser("003")
 
-    def tearDown(self):
-        # self.dao.drop()
-        pass
 
     """
     an'ade un usuario en la db, lo elimina y lo intenta leer
@@ -34,11 +34,6 @@ class Test_db_users(unittest.TestCase):
         self.dao.deleteUser("001")
         response = self.dao.getUser("001")
         self.assertEqual(response, {})
-
-    """
-    an'ade un usuario en la db y despues lo lee. 
-    despues compara el usuario que creo y el que recibio de la db
-    """
 
     def test_add_and_getUser(self):
         user = {
@@ -56,8 +51,6 @@ class Test_db_users(unittest.TestCase):
         del user["id"]
         self.assertEqual(response, user)
         self.dao.deleteUser("001")
-
-    """an'ade 2 usuarios, los lee y despues compara"""
 
     def test_add_and_getUsers(self):
         user1 = {
@@ -91,11 +84,6 @@ class Test_db_users(unittest.TestCase):
         self.dao.deleteUser("001")
         self.dao.deleteUser("002")
 
-    """
-    an'ade un usuario en la db, le cambia el id a '009' y despues lo lee.
-    al final compara el id del usuario recibido con el '009'
-    """
-
     def test_update(self):
         user = {
             "id": "xxx",
@@ -125,7 +113,7 @@ class Test_db_users(unittest.TestCase):
             'religion': 'AA'
         }
         self.dao.insertUser(user)
-        self.dao.updateUserPData(userOtherValues)
+        self.dao.updateUser(userOtherValues)
         response = self.dao.getUser("001")
         del response["id"]
         self.assertEqual(response, correctResponse)

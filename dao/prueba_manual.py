@@ -2,6 +2,7 @@ import re
 from dao import DAO
 import os
 from dao_db_users import DAO_db_users
+from dao_db_community import DAO_db_community
 
 from dao_csv import DAO_csv
 from dao_json import DAO_json
@@ -21,6 +22,7 @@ def main():
 
     dao = DAO_db_users()
     dao.drop()
+
     user1 = {
         "id": "xxx",
         "userid": "001",
@@ -49,11 +51,10 @@ def main():
         'religion': 'AA'
     }
     dao.insertUser(user1)
-    dao.updateUserPData(user2)
+    dao.updateUser(user2)
     # print(dao.getUser("001"))
     print(dao.getUsers())
-    #dao.replaceUser(user1)
-
+    type(dao.getUsers())
 
 
 

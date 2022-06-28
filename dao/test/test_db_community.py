@@ -16,11 +16,11 @@ class Test_community(unittest.TestCase):
         self.dao = DAO_db_community()
 
     def tearDown(self):
-        self.dao.drop()
-
-    """
-    an'ade un usuario en la db, lo elimina y lo intenta leer
-    """
+        # self.dao.drop()
+        self.dao.deleteCommunity("001")
+        self.dao.deleteCommunity("002")
+        self.dao.deleteCommunity("009")
+        self.dao.deleteCommunity("123")
 
     def test_deleteCommunity(self):
         data = {"id": "001"}
@@ -28,11 +28,6 @@ class Test_community(unittest.TestCase):
         self.dao.deleteCommunity("001")
         response = self.dao.getCommunity("001")
         self.assertEqual(response, {})
-
-    """
-    an'ade un usuario en la db y despues lo lee. 
-    despues compara el usuario que creo y el que recibio de la db
-    """
 
     def test_add_and_getCommunity(self):
         data = {
@@ -45,8 +40,6 @@ class Test_community(unittest.TestCase):
         self.assertEqual(response, data)
         self.dao.deleteCommunity("001")
 
-    """an'ade 2 usuarios, los lee y despues compara"""
-
     def test_add_and_getCommunities(self):
         data1 = {"id": "001"}
         data2 = {"id": "002"}
@@ -57,11 +50,6 @@ class Test_community(unittest.TestCase):
         self.assertIn(data2, response)
         self.dao.deleteCommunity("001")
         self.dao.deleteCommunity("002")
-
-    """
-    an'ade un usuario en la db, le cambia el id a '009' y despues lo lee.
-    al final compara el id del usuario recibido con el '009'
-    """
 
     def test_replace(self):
         data = {"id": "001"}

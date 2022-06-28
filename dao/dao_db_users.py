@@ -1,5 +1,4 @@
 from bson.json_util import dumps, loads
-
 from dao import DAO
 from copy import copy, deepcopy
 
@@ -12,7 +11,7 @@ class DAO_db_users(DAO):
     def __init__(self, route="mongodb://localhost:27017"):
         """
         :Parameters:
-            route: mongodb address, Default value: mongodb://localhost:27017>
+            route: mongodb address, Default value: mongodb://localhost:27017
         """
         super().__init__(route)
         self.mongo = MongoClient(self.route)
@@ -50,7 +49,7 @@ class DAO_db_users(DAO):
     def insertUser(self, userJSON):
         """
         :Parameters:
-            userJSON: JSON value, Type: <class ‘dict’>
+            userJSON: JSON value, Type: json <class 'dict'>
         """
         user = copy(userJSON)
         userTemplate = self.template.copy()
@@ -58,21 +57,21 @@ class DAO_db_users(DAO):
         # temp["userid"] = userJSON["userid"]
         # temp["origin"] = userJSON["origin"]
         # temp["source_id"] = userJSON["source_id"]
-        for key in userJSON.keys():  # anadimos los campos necesarios
+        for key in user.keys():  # anadimos los campos necesarios
             if key in self.template.keys():
-                userTemplate[key] = userJSON[key]
+                userTemplate[key] = user[key]
 
-        items = (userJSON.keys() - self.template.keys())
+        items = (user.keys() - self.template.keys())
         for item in items:
             userPname = userTemplate.copy()
             userPname["pname"] = item
-            userPname["pvalue"] = userJSON[item]
+            userPname["pvalue"] = user[item]
             self.db_users.insert_one(userPname)
 
     def getUsers(self):
         """
         :Return:
-            List with all users, Type: list(<class 'dict'>)
+            List with all users, Type: json List[<class 'dict'>]
         """
         # data = self.db_users.find({}, {"_id": 0})
         dataList = self.db_users.find({})
@@ -84,6 +83,7 @@ class DAO_db_users(DAO):
         listUsers = []
         for i in listUsersId:
             listUsers.append(self.getUser(i))
+
         return listUsers
 
     def getUser(self, userId):
@@ -91,7 +91,7 @@ class DAO_db_users(DAO):
         :Parameters:
             userId: User id, Type: <class 'str'>
         :Return:
-            User, Type: <class 'dict'>
+            User, Type: json <class 'dict'>
         """
         # data = self.db_users.find({"userid": userId}, {"_id": 0})
         data = self.db_users.find({"userid": userId})
@@ -109,22 +109,53 @@ class DAO_db_users(DAO):
 
         return user
 
-    def updateUserPData(self, newJSON):
-        user = self.getUser(newJSON["userid"])
-        for item in newJSON.keys():
+    def updateUser(self, newJSON):
+        """
+        :Parameters:
+            newJSON: User/s, Type: <class 'dict'> OR List[<class 'dict'>]
+        """
+        newData = copy(newJSON)
+        if isinstance(newData, list):
+            if len(newData) > 1:
+                self.__updateMany(newData)
+            else:
+                self.__updateOne(newData[0])
+        else:
+            self.__updateOne(newData)
+
+    def __updateOne(self, newData):
+        user = self.getUser(newData["userid"])
+        for item in newData.keys():
             if item not in self.templateWithoutP.keys():
-                user[item] = newJSON[item]
-        self.deleteUser(newJSON["userid"])
+                user[item] = newData[item]
+        self.deleteUser(newData["userid"])
         self.insertUser(user)
-        print(user)
+
+    def __updateMany(self, newData):
+        for user in newData:
+            self.__updaneOne(user)
 
     def replaceUser(self, newJSON):
         """
         :Parameters:
-            newJSON: JSON value, Type: <class 'dict'>
+            newJSON: User/s, Type: <class 'dict'> OR List[<class 'dict'>]
         """
-        self.deleteUser(newJSON["userid"])
-        self.insertUser(newJSON)
+        newData = copy(newJSON)
+        if isinstance(newData, list):
+            if len(newData) > 1:
+                self.__replaceUserMany(newData)
+            else:
+                self.__replaceUserOne(newData[0])
+        else:
+            self.__replaceUserOne(newData)
+
+    def __replaceUserOne(self, newData):
+        self.deleteUser(newData["userid"])
+        self.insertUser(newData)
+
+    def __replaceUserMany(self, newData):
+        for user in newData:
+            self.__replaceUserOne(user)
 
     def deleteUser(self, userId):
         """
@@ -134,4 +165,7 @@ class DAO_db_users(DAO):
         response = self.db_users.delete_many({"userid": userId})
 
     def drop(self):
+        """
+            Mongo DB Drop Collection
+        """
         self.db_users.drop()
