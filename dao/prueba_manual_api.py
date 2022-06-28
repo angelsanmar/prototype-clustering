@@ -34,7 +34,6 @@ def main():
                     "datapoints": 0
                   }
                 ]
-    json_dump = json.dumps(data_set)
 
     data, response = DAO_api().updateUser(23, data_set)
     print(response.status_code)

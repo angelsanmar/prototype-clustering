@@ -27,7 +27,7 @@ class DAO_api(DAO):
     """__API for users__"""
 
     def userCommunities(self, userId):
-        response = requests.get("http://spice.fdi.ucm.es/v1.1/users/{}/update-generated-content".format(userId))
+        response = requests.get("http://spice.fdi.ucm.es/v1.1/users/{}/communities".format(userId))
         self.responseProcessing(response)
         return self.data, response
 
@@ -35,7 +35,7 @@ class DAO_api(DAO):
         # tambien se puede llamar como updateUGC
 
     def updateUser(self, userId, ugc):
-        response = requests.post("http://localhost:8080/v1.1/users/{}/update-generated-content".format(userId),
+        response = requests.post("http://spice.fdi.ucm.es/v1.1/users/{}/update-generated-content".format(userId),
                                  json=ugc)
         # self.responseProcessing(response)
         return self.data, response
@@ -43,16 +43,16 @@ class DAO_api(DAO):
     """__API for communities__"""
 
     def communityList(self):
-        response = requests.get("http://localhost:8080/v1.1/communities")
+        response = requests.get("http://spice.fdi.ucm.es/v1.1/communities")
         self.responseProcessing(response)
         return self.data, response
 
     def communityDescription(self, communityId):
-        response = requests.get("http://localhost:8080/v1.1/communities/{}".format(communityId))
+        response = requests.get("http://spice.fdi.ucm.es/v1.1/communities/{}".format(communityId))
         self.responseProcessing(response)
         return self.data, response
 
     def communityUsers(self, communityId):
-        response = requests.get("http://localhost:8080/v1.1/communities/{}/users".format(communityId))
+        response = requests.get("http://spice.fdi.ucm.es/v1.1/communities/{}/users".format(communityId))
         self.responseProcessing(response)
         return self.data, response
