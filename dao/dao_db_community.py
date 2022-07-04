@@ -10,14 +10,21 @@ from pymongo import MongoClient
 
 class DAO_db_community(DAO):
 
-    def __init__(self, route="mongodb://localhost:27017"):
+    def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """
         :Parameters:
-            route: mongodb address, Default value: mongodb://localhost:27017
+            MONGO_HOST: mongodb address, Default value: "localhost"
+            MONGO_PORT: mongodb port, Default value: 27018
+            MONGO_USER: mongodb user, Default value: ""
+            MONGO_PASS: mongodb pass, Default value: ""
+            MONGO_DB: mongodb db name, Default value: "spiceComMod"
         """
-        super().__init__(route)
-        self.mongo = MongoClient(self.route)
-        self.db_communities = self.mongo.local.communities
+        super().__init__(MONGO_HOST)
+
+        uri = "mongodb://{}:{}@{}:{}/?authMechanism=DEFAULT&authSource=spiceComMod".format(MONGO_USER, MONGO_PASS,
+                                                                                           MONGO_HOST, MONGO_PORT)
+        self.mongo = MongoClient(uri)
+        self.db_communities = self.mongo.spiceComMod.communities
 
     def getData(self):
         raise ValueError('Incorrect operation. Please use a specific method for the API request')
@@ -108,7 +115,8 @@ class DAO_db_community(DAO):
                 "$set": {
                     "explanation": value
                 }
-            }
+            },
+            upsert = True
         )
         return response
 

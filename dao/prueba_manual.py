@@ -21,10 +21,10 @@ from dao import DAO
 def main():
     # Cambiar la contrasenya (XXX) -> (contrasenya)
     dao = DAO_db_users("localhost", 27018, "spice", "XXX")
+    # dao = DAO_db_community("localhost", 27018, "spice", "XXX")
 
     dao.drop()
     user1 = {
-        "id": "11541",
         "userid": "001",
         "origin": "aaa",
         "source_id": "bbb",
@@ -33,7 +33,6 @@ def main():
         "hobby": "bwm"
     }
     user2 = {
-        "id": "11542",
         "userid": "001",
         "origin": "aaa",
         "source_id": "bbb",
@@ -48,7 +47,8 @@ def main():
         'hobby': 'bwm',
         'gender': 'M',
         'age': '19',
-        'religion': 'AA'
+        'religion': 'AA',
+        '_id': "xxx"
     }
     dao.insertUser(user1)
     print(dao.getUsers())
@@ -56,7 +56,6 @@ def main():
 
     # print(dao.getUser("001"))
     print(dao.getUsers())
-
 
 
 main()

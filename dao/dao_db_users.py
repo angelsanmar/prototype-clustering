@@ -11,7 +11,11 @@ class DAO_db_users(DAO):
     def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """
         :Parameters:
-            route: mongodb address, Default value: mongodb://localhost:27017
+            MONGO_HOST: mongodb address, Default value: "localhost"
+            MONGO_PORT: mongodb port, Default value: 27018
+            MONGO_USER: mongodb user, Default value: ""
+            MONGO_PASS: mongodb pass, Default value: ""
+            MONGO_DB: mongodb db name, Default value: "spiceComMod"
         """
         super().__init__(MONGO_HOST)
         # print("mongodb://{}:{}@{}:{}/".format(username, password, self.route, port))
