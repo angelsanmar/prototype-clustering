@@ -8,22 +8,26 @@ from pymongo import MongoClient
 
 class DAO_db_users(DAO):
 
-    def __init__(self, route="mongodb://localhost:27017"):
+    def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """
         :Parameters:
             route: mongodb address, Default value: mongodb://localhost:27017
         """
-        super().__init__(route)
-        self.mongo = MongoClient(self.route)
-        self.db_users = self.mongo.local.users
+        super().__init__(MONGO_HOST)
+        # print("mongodb://{}:{}@{}:{}/".format(username, password, self.route, port))
+        uri = "mongodb://{}:{}@{}:{}/?authMechanism=DEFAULT&authSource=spiceComMod".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT)
+        self.mongo = MongoClient(uri)
+        # self.mongo = MongoClient('mongodb://%s:%s@127.0.0.1' % (username, password)) #MongoClient("mongodb://{}:{}@{}:{}/".format(username, password, self.route, port))
+
+        self.db_users = self.mongo.spiceComMod.users
         self.template = {
-            "id": "xxx",
+            # "_id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx"
         }
         self.templateFull = {
-            "id": "xxx",
+            # "_id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx",
@@ -34,7 +38,7 @@ class DAO_db_users(DAO):
             "datapoints": "xxx"  # Not required
         }
         self.templateWithoutP = {
-            "id": "xxx",
+            "_id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx",
@@ -53,10 +57,6 @@ class DAO_db_users(DAO):
         """
         user = copy(userJSON)
         userTemplate = self.template.copy()
-        # temp["id"] = userJSON["id"]
-        # temp["userid"] = userJSON["userid"]
-        # temp["origin"] = userJSON["origin"]
-        # temp["source_id"] = userJSON["source_id"]
         for key in user.keys():  # anadimos los campos necesarios
             if key in self.template.keys():
                 userTemplate[key] = user[key]
@@ -100,7 +100,7 @@ class DAO_db_users(DAO):
             return {}
         else:
             user = self.template.copy()
-            user["id"] = data[0]["_id"]
+            user["_id"] = data[0]["_id"]
             user["userid"] = data[0]["userid"]
             user["origin"] = data[0]["origin"]
             user["source_id"] = data[0]["source_id"]
@@ -124,7 +124,9 @@ class DAO_db_users(DAO):
             self.__updateOne(newData)
 
     def __updateOne(self, newData):
+        # self.db_users.update_one({ "userid": newData["userid"], "pname": newData["pname"] }, newData, upsert = True)
         user = self.getUser(newData["userid"])
+        del user["_id"]
         for item in newData.keys():
             if item not in self.templateWithoutP.keys():
                 user[item] = newData[item]

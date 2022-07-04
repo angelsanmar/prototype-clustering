@@ -19,28 +19,33 @@ from dao import DAO
 
 
 def main():
-
     dao = DAO_api()
     data_set = [
-                  {
-                    "id": "23",
-                    "userid": "23",
-                    "origin": "90e6d701748f08514b01",
-                    "source_id": "90e6d701748f08514b01",
-                    "source": "Content description",
-                    "pname": "DemographicGender",
-                    "pvalue": "F (for Female value)",
-                    "context": "application P:DemographicsPrep",
-                    "datapoints": 0
-                  }
-                ]
+        {
+            "userid": "1",
+            "origin": "90e6d701748f08514b01",
+            "source_id": "90e6d701748f08514b01",
+            "source": "Content description",
+            "pname": "DemographicGender",
+            "pvalue": "F (for Female value)",
+            "context": "application P:DemographicsPrep",
+            "datapoints": 0
+        },
+        {
+            "userid": "1",
+            "origin": "90e6d701748f08514b01",
+            "source_id": "90e6d701748f08514b01",
+            "source": "Content description",
+            "pname": "Age",
+            "pvalue": "22",
+            "context": "application P:DemographicsPrep",
+            "datapoints": 0
+        }
+    ]
 
-    data, response = DAO_api().updateUser(23, data_set)
+    data, response = DAO_api().updateUser(1, data_set)
     print(response.status_code)
-
-
-
-
+    # print(response.json())
 
 
 main()
