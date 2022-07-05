@@ -19,8 +19,8 @@ from dao import DAO
 
 
 def main():
-    # Cambiar la contrasenya (XXX) -> (contrasenya)
-    dao = DAO_db_users("localhost", 27018, "spice", "XXX")
+
+    dao = DAO_db_users("localhost", 27018, "spice", "spicepassword")
     # dao = DAO_db_community("localhost", 27018, "spice", "XXX")
 
     dao.drop()

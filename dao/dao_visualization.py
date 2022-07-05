@@ -8,7 +8,7 @@ import pymongo
 from pymongo import MongoClient
 
 
-class DAO_VISUALIZATION(DAO):
+class DAO_visualization(DAO):
 
     def __init__(self, route="mongodb://localhost:27017"):
         """

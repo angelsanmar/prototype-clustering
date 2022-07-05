@@ -19,6 +19,9 @@ from dao import DAO
 
 
 def main():
+    daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
+    daoUsers.drop()
+
     dao = DAO_api()
     data_set = [
         {
@@ -45,9 +48,13 @@ def main():
         }
     ]
 
+    # Hacemos post a la API. La API lo guarda en la db
     response = dao.updateUser(1, data_set)
     print(response.status_code)
-    # print(response.json())
+
+    # Pedimos los datos desde la DAO Users, la DAO lee de db
+    daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
+    print(daoUsers.getUser("1"))
 
 
 main()

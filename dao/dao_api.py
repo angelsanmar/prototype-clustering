@@ -37,8 +37,7 @@ class DAO_api(DAO):
     def updateUser(self, userId, ugc):
         response = requests.post("http://localhost:8080/v1.1/users/{}/update-generated-content".format(userId),
                                  json=ugc)
-        # self.responseProcessing(response)
-        return self.data, response
+        return response
 
     """__API for communities__"""
 

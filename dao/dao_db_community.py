@@ -124,4 +124,4 @@ class DAO_db_community(DAO):
         """
             Mongo DB Drop Collection
         """
-        self.db_communities.drop()
+        self.db_communities.delete_many({})

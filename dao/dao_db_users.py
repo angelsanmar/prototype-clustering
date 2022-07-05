@@ -104,10 +104,19 @@ class DAO_db_users(DAO):
             return {}
         else:
             user = self.template.copy()
+            # campos obligatorios
             user["_id"] = data[0]["_id"]
             user["userid"] = data[0]["userid"]
             user["origin"] = data[0]["origin"]
             user["source_id"] = data[0]["source_id"]
+            # campos no obligatorios
+            if "source" in data[0]:
+                user["source"] = data[0]["source"]
+            if "context" in data[0]:
+                user["context"] = data[0]["context"]
+            if "datapoints" in data[0]:
+                user["datapoints"] = data[0]["datapoints"]
+            # pname and pvalue
             for item in data:
                 user[item["pname"]] = item["pvalue"]
 
@@ -174,4 +183,5 @@ class DAO_db_users(DAO):
         """
             Mongo DB Drop Collection
         """
-        self.db_users.drop()
+        self.db_users.delete_many({})
+
