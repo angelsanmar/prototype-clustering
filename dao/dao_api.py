@@ -9,6 +9,7 @@ from requests.auth import HTTPBasicAuth
 class DAO_api(DAO):
     """
     outdated !!
+    Es la DAO para acceder a la API oficial de Spice.
     """
     def __init__(self, route=""):
         super().__init__(route)

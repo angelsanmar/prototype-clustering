@@ -25,6 +25,7 @@ class DAO_db_community(DAO):
                                                                                            MONGO_HOST, MONGO_PORT)
         self.mongo = MongoClient(uri)
         self.db_communities = self.mongo.spiceComMod.communities
+        self.db_fullListCommunities = self.mongo.spiceComMod["Full JSON List"]
 
     def getData(self):
         raise ValueError('Incorrect operation. Please use a specific method for the API request')
@@ -38,11 +39,45 @@ class DAO_db_community(DAO):
 
     def insertCommunity(self, communityJSON):
         """
+        Inserts only 1 community to db_communities
         :Parameters:
             communityJSON: Community, Type: <class 'dict'>
         """
         temp = copy(communityJSON)
-        response = self.db_communities.insert_one(temp)
+        self.db_communities.insert_one(temp)
+
+    def insertFileList(self, fileId, dataJSON):
+        """
+        Inserts json file to 'API Vis DB' and all communities from file to db_communities
+            :Parameters:
+                fileId: id, Type: <class 'dict'>
+                communityJSON: Community, Type: <class 'dict'>
+        """
+        temp = copy(dataJSON)
+        temp["fileId"] = fileId
+        self.db_fullListCommunities.insert_one(copy(temp))
+        for community in temp["communities"]:
+            self.db_communities.insert_one(community)
+
+    def getFileList(self, fileId):
+        """
+        Returns file
+        :Parameters:
+                fileId: id, Type: <class 'dict'>
+        :Return:
+            File List
+        """
+        data = self.db_fullListCommunities.find({"fileId": fileId}, {"_id": 0})
+        return loads(dumps(list(data)))
+
+    def getFileLists(self):
+        """
+        Returns all files
+        :Return:
+            All File Lists
+        """
+        data = self.db_fullListCommunities.find({}, {"_id": 0})
+        return loads(dumps(list(data)))
 
     def getCommunities(self):
         """
@@ -116,12 +151,25 @@ class DAO_db_community(DAO):
                     "explanation": value
                 }
             },
-            upsert = True
+            upsert=True
         )
         return response
 
+    def dropAll(self):
+        """
+            Mongo DB Drop all documents in db_communities and db_fullListCommunities collection
+        """
+        self.drop()
+        self.dropFullList()
+
     def drop(self):
         """
-            Mongo DB Drop Collection
+            Mongo DB Drop all documents in db_communities collection
         """
         self.db_communities.delete_many({})
+
+    def dropFullList(self):
+        """
+            Mongo DB Drop all documents in db_fullListCommunities collection
+        """
+        self.db_fullListCommunities.delete_many({})

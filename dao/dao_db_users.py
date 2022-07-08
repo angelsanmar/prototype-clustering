@@ -19,7 +19,8 @@ class DAO_db_users(DAO):
         """
         super().__init__(MONGO_HOST)
         # print("mongodb://{}:{}@{}:{}/".format(username, password, self.route, port))
-        uri = "mongodb://{}:{}@{}:{}/?authMechanism=DEFAULT&authSource=spiceComMod".format(MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_PORT)
+        uri = "mongodb://{}:{}@{}:{}/?authMechanism=DEFAULT&authSource=spiceComMod".format(MONGO_USER, MONGO_PASS,
+                                                                                           MONGO_HOST, MONGO_PORT)
         self.mongo = MongoClient(uri)
         # self.mongo = MongoClient('mongodb://%s:%s@127.0.0.1' % (username, password)) #MongoClient("mongodb://{}:{}@{}:{}/".format(username, password, self.route, port))
 
@@ -150,6 +151,18 @@ class DAO_db_users(DAO):
         for user in newData:
             self.__updaneOne(user)
 
+    def insertUser_API(self, userJSON):
+        """
+        Used only in the http server API
+        """
+        try:
+            for userD in userJSON:
+                self.db_users.update_one({"userid": userD["userid"], "pname": userD["pname"]}, {"$set": userD},
+                                         upsert=True)
+            return True
+        except:
+            return False
+
     def replaceUser(self, newJSON):
         """
         :Parameters:
@@ -184,4 +197,3 @@ class DAO_db_users(DAO):
             Mongo DB Drop Collection
         """
         self.db_users.delete_many({})
-

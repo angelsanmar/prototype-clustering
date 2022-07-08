@@ -19,8 +19,9 @@ class DAO_csv(DAO):
 
     def extractData(self):
         self.data = []
-        with open(self.route) as csvFile:
-            csvReader = csv.DictReader(csvFile)
+        with open(self.route, encoding="ISO-8859-1") as csvFile:
+            reader = csv.reader(x.replace('\0', '') for x in csvFile)
+            csvReader = csv.DictReader(reader)
             for rows in csvReader:
                 self.data.append(rows)
         # self.data = json.dumps(self.data, sort_keys=True, indent=4)
