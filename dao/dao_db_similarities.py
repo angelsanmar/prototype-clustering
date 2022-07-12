@@ -1,11 +1,13 @@
 import json
 from bson.json_util import dumps, loads
-
-from dao import DAO
 from copy import copy, deepcopy
-
 import pymongo
 from pymongo import MongoClient
+
+from context import dao
+from dao.dao_class import DAO
+
+
 
 
 class DAO_db_similarity(DAO):
@@ -28,7 +30,7 @@ class DAO_db_similarity(DAO):
 
 
     def getData(self):
-        raise ValueError('Incorrect operation. Please use a specific method for the API request')
+        return self.getSimilarities()
 
     def deleteSimilarity(self, target_community_id="", other_community_id=""):
         """

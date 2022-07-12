@@ -1,11 +1,11 @@
-import json
 from bson.json_util import dumps, loads
-
-from dao import DAO
-from copy import copy, deepcopy
-
 import pymongo
 from pymongo import MongoClient
+from copy import copy, deepcopy
+
+from context import dao
+from dao.dao_class import DAO
+
 
 
 class DAO_db_community(DAO):
@@ -28,7 +28,7 @@ class DAO_db_community(DAO):
         self.db_fullListCommunities = self.mongo.spiceComMod["Full JSON List"]
 
     def getData(self):
-        raise ValueError('Incorrect operation. Please use a specific method for the API request')
+        return self.getCommunities()
 
     def deleteCommunity(self, communityId):
         """

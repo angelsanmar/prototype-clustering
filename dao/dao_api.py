@@ -1,8 +1,9 @@
 import json
-from dao import DAO
-
 import requests
 from requests.auth import HTTPBasicAuth
+
+from context import dao
+from dao.dao_class import DAO
 
 
 

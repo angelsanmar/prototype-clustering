@@ -1,13 +1,10 @@
 import unittest
 import json
-
+from context import dao
 import os, sys
 
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
 
-from dao_db_community import DAO_db_community
+from dao.dao_db_community import DAO_db_community
 
 
 class Test_community(unittest.TestCase):

@@ -2,6 +2,7 @@
 import unittest
 import test_api
 import test_file
+from context import dao
 
 suite = unittest.TestLoader().loadTestsFromModule(test_api)
 suite = unittest.TestLoader().discover("")

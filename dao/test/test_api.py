@@ -1,14 +1,11 @@
 import unittest
 import json
-
+from context import dao
 import os, sys
 
-currentdir = os.path.dirname(os.path.realpath(__file__))
-parentdir = os.path.dirname(currentdir)
-sys.path.append(parentdir)
 
-from dao_api import DAO_api
-from dao_linkedDataHub import DAO_linkedDataHub
+from dao.dao_api import DAO_api
+from dao.dao_linkedDataHub import DAO_linkedDataHub
 
 
 class Test(unittest.TestCase):

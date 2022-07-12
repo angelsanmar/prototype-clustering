@@ -5,12 +5,12 @@ Usage::
 """
 
 from bson.json_util import dumps, loads
-
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 
-from dao_db_users import DAO_db_users
-from dao_db_community import DAO_db_community
+from context import dao
+from dao.dao_db_users import DAO_db_users
+from dao.dao_db_community import DAO_db_community
 
 
 class Handler(BaseHTTPRequestHandler):

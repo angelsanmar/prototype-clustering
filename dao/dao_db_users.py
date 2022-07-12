@@ -1,5 +1,8 @@
 from bson.json_util import dumps, loads
-from dao import DAO
+
+from context import dao
+from dao.dao_class import DAO
+
 from copy import copy, deepcopy
 
 import pymongo
@@ -26,13 +29,13 @@ class DAO_db_users(DAO):
 
         self.db_users = self.mongo.spiceComMod.users
         self.template = {
-            # "_id": "xxx",
+            "ugc_id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx"
         }
         self.templateFull = {
-            # "_id": "xxx",
+            "ugc_id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx",
@@ -43,7 +46,7 @@ class DAO_db_users(DAO):
             "datapoints": "xxx"  # Not required
         }
         self.templateWithoutP = {
-            "_id": "xxx",
+            "ugc_id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx",
@@ -53,7 +56,7 @@ class DAO_db_users(DAO):
         }
 
     def getData(self):
-        raise ValueError('Incorrect operation. Please use a specific method for the API request')
+        return self.getUsers()
 
     def insertUser(self, userJSON):
         """
@@ -61,17 +64,37 @@ class DAO_db_users(DAO):
             userJSON: JSON value, Type: json <class 'dict'>
         """
         user = copy(userJSON)
-        userTemplate = self.template.copy()
-        for key in user.keys():  # anadimos los campos necesarios
+        userTemplate = copy(self.template)
+        # anadimos los campos necesarios
+        # si es un id (viene del ugc) entonces lo guardamos con otro nombre
+        # si es un _id (viene de mongodb) entonces lo ignoramos
+        for key in user.keys():
             if key in self.template.keys():
-                userTemplate[key] = user[key]
+                if key == "id":
+                    userTemplate["ugc_id"] = user[key]
+                elif key != "_id":
+                    userTemplate[key] = user[key]
 
         items = (user.keys() - self.template.keys())
         for item in items:
-            userPname = userTemplate.copy()
-            userPname["pname"] = item
-            userPname["pvalue"] = user[item]
-            self.db_users.insert_one(userPname)
+            userWithP = copy(userTemplate)
+            userWithP["pname"] = item
+            userWithP["pvalue"] = user[item]
+            self.db_users.insert_one(userWithP)
+
+    def insertUser_API(self, userJSON):
+        """
+        Used only in the http server API
+        :Return:
+            Update Result: True or False
+        """
+        try:
+            for userD in userJSON:
+                self.db_users.update_one({"userid": userD["userid"], "pname": userD["pname"]}, {"$set": userD},
+                                         upsert=True)
+            return True
+        except:
+            return False
 
     def getUsers(self):
         """
@@ -82,13 +105,14 @@ class DAO_db_users(DAO):
         dataList = self.db_users.find({})
         dataList = loads(dumps(list(dataList)))
         listUsersId = []
+        # guardamos los id's de los usuarios
         for i in dataList:
             if i["userid"] not in listUsersId:
                 listUsersId.append(i["userid"])
+        # recorremos esos id's y metemos uno por uno a la lista
         listUsers = []
         for i in listUsersId:
             listUsers.append(self.getUser(i))
-
         return listUsers
 
     def getUser(self, userId):
@@ -111,6 +135,8 @@ class DAO_db_users(DAO):
             user["origin"] = data[0]["origin"]
             user["source_id"] = data[0]["source_id"]
             # campos no obligatorios
+            if "ugc_id" in data[0]:  # temporal mente lo puse aqui
+                user["ugc_id"] = data[0]["ugc_id"]
             if "source" in data[0]:
                 user["source"] = data[0]["source"]
             if "context" in data[0]:
@@ -140,29 +166,20 @@ class DAO_db_users(DAO):
     def __updateOne(self, newData):
         # self.db_users.update_one({ "userid": newData["userid"], "pname": newData["pname"] }, newData, upsert = True)
         user = self.getUser(newData["userid"])
-        del user["_id"]
-        for item in newData.keys():
-            if item not in self.templateWithoutP.keys():
-                user[item] = newData[item]
-        self.deleteUser(newData["userid"])
-        self.insertUser(user)
+        if user == {}:
+            self.insertUser(user)
+        else:
+            for item in newData.keys():
+                if item not in self.templateWithoutP.keys():
+                    user[item] = newData[item]  # actualizamos los valores y anadimos nuevos si hay
+            self.deleteUser(newData["userid"])
+            self.insertUser(user)
 
     def __updateMany(self, newData):
         for user in newData:
             self.__updaneOne(user)
 
-    def insertUser_API(self, userJSON):
-        """
-        Used only in the http server API
-        """
-        try:
-            for userD in userJSON:
-                self.db_users.update_one({"userid": userD["userid"], "pname": userD["pname"]}, {"$set": userD},
-                                         upsert=True)
-            return True
-        except:
-            return False
-
+    # # Realiza casi lo mismo que el update, solo que cambia completamente todos los valores, no solo los campos P
     def replaceUser(self, newJSON):
         """
         :Parameters:
@@ -194,6 +211,6 @@ class DAO_db_users(DAO):
 
     def drop(self):
         """
-            Mongo DB Drop Collection
+            Deletes all data in collection
         """
         self.db_users.delete_many({})
