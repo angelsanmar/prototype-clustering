@@ -177,7 +177,7 @@ class DAO_db_users(DAO):
 
     def __updateMany(self, newData):
         for user in newData:
-            self.__updaneOne(user)
+            self.__updateOne(user)
 
     # # Realiza casi lo mismo que el update, solo que cambia completamente todos los valores, no solo los campos P
     def replaceUser(self, newJSON):

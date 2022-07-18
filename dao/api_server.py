@@ -3,44 +3,97 @@ Very simple HTTP server in python for logging requests
 Usage::
     ./server.py [<port>]
 """
-
+import pymongo
 from bson.json_util import dumps, loads
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 
 from context import dao
+from dao.dao_db_perspectives import DAO_db_perspective
 from dao.dao_db_users import DAO_db_users
-from dao.dao_db_community import DAO_db_community
+from dao.dao_db_communities import DAO_db_community
 
 
 class Handler(BaseHTTPRequestHandler):
 
-    def _set_response(self, code, dataType='text/html'):
+    def __set_response(self, code, dataType='text/html'):
         self.send_response(code)
         self.send_header('Content-type', dataType)
         self.end_headers()
 
-    def do_GET(self):
-        """
-        self.path == /all -> devolver todos los ficheros
-        self.path != /all -> devolver el fichero que tenga el nombre igual a 'self.path[1:]'
-        """
-        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+    def __getIndex(self):
+        dao = DAO_db_community("localhost", 27018, "spice", "spicepassword")
+        data = dao.getFileIndex()
+        print(data)
+        self.__set_response(200, 'application/json')
+        self.wfile.write(dumps(data).encode(encoding='utf_8'))
 
-        request = str(self.path[1:])
-        daoCommunity = DAO_db_community("localhost", 27018, "spice", "spicepassword")
-        if request == "all":
-            data = daoCommunity.getFileLists()
-            self._set_response(200, 'application/json')
+    def __getPerspertive(self, perspectiveId):
+        dao = DAO_db_perspective("localhost", 27018, "spice", "spicepassword")
+        if perspectiveId == "all":
+            data = dao.getPerspectives()
+            self.__set_response(200, 'application/json')
             self.wfile.write(dumps(data).encode(encoding='utf_8'))
         else:
-            data = daoCommunity.getFileList(request)
-            if data != []:
-                self._set_response(200, 'application/json')
+            data = dao.getPerspective(perspectiveId)
+            if data:
+                self.__set_response(200, 'application/json')
                 self.wfile.write(dumps(data).encode(encoding='utf_8'))
             else:
-                self._set_response(404)
+                self.__set_response(404)
+                self.wfile.write("File not found\nGET request for {}".format(self.path).encode('utf-8'))
+
+    def __getFile(self, fileId):
+        dao = DAO_db_community("localhost", 27018, "spice", "spicepassword")
+        if fileId == "all":
+            data = dao.getFileLists()
+            self.__set_response(200, 'application/json')
+            self.wfile.write(dumps(data).encode(encoding='utf_8'))
+        else:
+            data = dao.getFileList(fileId)
+            if data:
+                self.__set_response(200, 'application/json')
+                self.wfile.write(dumps(data).encode(encoding='utf_8'))
+            else:
+                self.__set_response(404)
+                self.wfile.write("File not found\nGET request for {}".format(self.path).encode('utf-8'))
+
+    # TODO:
+    # + timeout
+    # - incorrect path
+    # - incorrect filename
+    def do_GET(self):
+        """
+        self.path == /all -> return all files
+        self.path != /all -> return file with name equal to 'self.path[1:]'
+        """
+        logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        try:
+            request = str(self.path[1:])
+            print(request)
+            if "json" in request[:4]:
+                print("json")
+                self.__getFile(request[5:])
+            elif "perspective" in request[:11]:
+                print("perspective")
+                self.__getPerspertive(request[12:])
+            elif "index" in request[:5]:
+                print("index")
+                self.__getIndex()
+            else:
+                print("error")
+                self.__set_response(404)
                 self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
+        except Exception as e:
+            print(e)
+            if str(e) != "pymongo.errors.ServerSelectionTimeoutError":
+                self.__set_response(500)
+                self.wfile.write("-Error-\nGET request for {}".format(self.path).encode('utf-8'))
+                # raise
+            else:
+                self.__set_response(500)
+                self.wfile.write(
+                    "-MongoDB connection timeout error-\nGET request for {}".format(self.path).encode('utf-8'))
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])  # <--- Gets the size of data
@@ -52,14 +105,14 @@ class Handler(BaseHTTPRequestHandler):
         daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
         ok = daoUsers.insertUser_API(user)
         if ok:
-            self._set_response(204)
+            self.__set_response(204)
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
             # </Update Community Model>
 
         else:
-            self._set_response(500)
+            self.__set_response(500)
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
 

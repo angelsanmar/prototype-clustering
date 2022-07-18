@@ -5,7 +5,7 @@ import os
 from context import dao
 from dao.dao_class import DAO
 from dao.dao_db_users import DAO_db_users
-from dao.dao_db_community import DAO_db_community
+from dao.dao_db_communities import DAO_db_community
 from dao.dao_db_similarities import DAO_db_similarity
 from dao.dao_csv import DAO_csv
 from dao.dao_json import DAO_json

@@ -2,7 +2,7 @@
 from context import dao
 from dao.dao_class import DAO
 from dao.dao_db_users import DAO_db_users
-from dao.dao_db_community import DAO_db_community
+from dao.dao_db_communities import DAO_db_community
 from dao.dao_db_similarities import DAO_db_similarity
 from dao.dao_csv import DAO_csv
 from dao.dao_json import DAO_json
@@ -53,19 +53,25 @@ def main():
             "pname": "DemographicGender",
             "pvalue": "F (for Female value)",
             "context": "application P:DemographicsPrep",
-            "datapoints": 0
+            "datapoints": 0,
+            "communities": {1,2,3}
         }
 
     # daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
     # daoUsers.insertUser_API(data_set)
     #
+    daoCom = DAO_db_community("localhost", 27018, "spice", "spicepassword")
+    dao = DAO_json('test/data/agglomerativeClusteringGAM.json')
+    daoCom.insertFileList("file0", dao.getData())
 
 
     ## Prueba para el POST y el GET
     # response = requests.post("http://localhost:8090/", json=data_set)
-    response = requests.get("http://localhost:8090/perspective0")
-    response = requests.get("http://localhost:8090/all")
-    response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
+    # response = requests.get("http://localhost:8090/json/file0")
+    # response = requests.get("http://localhost:8090/json/all")
+    response = requests.get("http://localhost:8090/perspective/all")
+    # response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
+    # response = requests.get("http://localhost:8090/index")
     print(response.text)
     print(response.status_code)
     print(response.headers)

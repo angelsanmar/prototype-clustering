@@ -23,7 +23,7 @@ class DAO_db_community(DAO):
 
         uri = "mongodb://{}:{}@{}:{}/?authMechanism=DEFAULT&authSource=spiceComMod".format(MONGO_USER, MONGO_PASS,
                                                                                            MONGO_HOST, MONGO_PORT)
-        self.mongo = MongoClient(uri)
+        self.mongo = MongoClient(uri, serverSelectionTimeoutMS=5000)
         self.db_communities = self.mongo.spiceComMod.communities
         self.db_fullListCommunities = self.mongo.spiceComMod["Full JSON List"]
 
@@ -58,6 +58,14 @@ class DAO_db_community(DAO):
         self.db_fullListCommunities.insert_one(copy(temp))
         for community in temp["communities"]:
             self.db_communities.insert_one(community)
+
+    def getFileIndex(self):
+        data = self.db_fullListCommunities.find({}, {"fileId": 1, "_id": 0})
+        data = loads(dumps(list(data)))
+        index = []
+        for file in data:
+            index.append(file["fileId"])
+        return index
 
     def getFileList(self, fileId):
         """

@@ -4,7 +4,7 @@ from context import dao
 import os, sys
 
 
-from dao.dao_db_community import DAO_db_community
+from dao.dao_db_communities import DAO_db_community
 
 
 class Test_community(unittest.TestCase):
