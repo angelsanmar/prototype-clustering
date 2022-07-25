@@ -20,7 +20,7 @@ from dao.dao_class import DAO
 # }
 # Similarities: key (attribute); value (weight or importance)
 
-class DAO_db_perspective(DAO):
+class DAO_db_perspectives(DAO):
 
     def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """
@@ -65,7 +65,7 @@ class DAO_db_perspective(DAO):
             perspective, Type: <class 'dict'>
         """
         data = {}
-        data = self.db_perspectives.find({"perspectiveId": perspectiveId}, {"_id": 0})
+        data = self.db_perspectives.find({"id": perspectiveId}, {"_id": 0})
 
         data = loads(dumps(list(data)))
         if len(data) == 0:
@@ -79,14 +79,14 @@ class DAO_db_perspective(DAO):
             newJSON: JSON value, Type: <class 'dict'>
         """
         temp = copy(newJSON)
-        response = self.db_perspectives.replace_one({"perspectiveId": perspectiveId}, temp)
+        response = self.db_perspectives.replace_one({"id": perspectiveId}, temp)
 
     def deletePerspective(self, perspectiveId):
         """
         :Parameters:
             perspectiveId: Type: <class 'str'>
         """
-        self.db_perspectives.delete_one({'perspectiveId': perspectiveId})
+        self.db_perspectives.delete_one({'id': perspectiveId})
 
     def drop(self):
         """
