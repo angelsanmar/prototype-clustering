@@ -47,7 +47,10 @@ class DAO_db_perspectives(DAO):
             perspectiveJSON: Perspective, Type: <class 'dict'>
         """
         temp = copy(perspectiveJSON)
-        self.db_perspectives.insert_one(temp)
+        if type(temp) is list:
+            self.db_perspectives.insert_many(temp)
+        else:
+            self.db_perspectives.insert_one(temp)
 
     def getPerspectives(self):
         """

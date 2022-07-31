@@ -41,10 +41,15 @@ class DAO_db_community(DAO):
         """
         Inserts only 1 community to db_communities
         :Parameters:
-            communityJSON: Community, Type: <class 'dict'>
+            communityJSON: Community, Type: <class 'dict'> OR list(<class 'dict'>)
         """
         temp = copy(communityJSON)
-        self.db_communities.insert_one(temp)
+        if type(temp) is list:
+            self.db_communities.insert_many(temp)
+        else:
+            self.db_communities.insert_one(temp)
+
+
 
     def insertFileList(self, fileId, dataJSON):
         """

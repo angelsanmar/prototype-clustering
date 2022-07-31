@@ -61,8 +61,14 @@ class DAO_db_users(DAO):
     def insertUser(self, userJSON):
         """
         :Parameters:
-            userJSON: JSON value, Type: json <class 'dict'>
+            userJSON: JSON value, Type: json <class 'dict'> OR List(<class 'dict'>)
         """
+        if type(userJSON) is list:
+            self.__insertMany(userJSON)
+        else:
+            self.__insertOne(userJSON)
+
+    def __insertOne(self, userJSON):
         user = copy(userJSON)
         userTemplate = copy(self.template)
         # anadimos los campos necesarios
@@ -81,6 +87,10 @@ class DAO_db_users(DAO):
             userWithP["pname"] = item
             userWithP["pvalue"] = user[item]
             self.db_users.insert_one(userWithP)
+
+    def __insertMany(self, usersJSON):
+        for user in usersJSON:
+            self.__insertOne(user)
 
     def insertUser_API(self, userJSON):
         """

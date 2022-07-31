@@ -23,12 +23,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         """
         _get handler_
-        API:
-        /file/all                       -> return all files
-        /file/{fileId}                  -> return file with name equal to 'self.path[1:]'
-        /perspective/all                -> ...
-        /perspective/{perspectiveId}    -> ...
-        /index                          -> return json files index (returns only files id)
+        API doc:
+        http://localhost:8090/file/all                       -> return all files -- list
+        http://localhost:8090/file/{fileId}                  -> return file with name equal to 'self.path[1:]' -- json
+        http://localhost:8090/perspective/all                -> ... -- list
+        http://localhost:8090/perspective/{perspectiveId}    -> ... -- json
+        http://localhost:8090/index                          -> return json files index (returns only files id) -- list
         """
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         try:

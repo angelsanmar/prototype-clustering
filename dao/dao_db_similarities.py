@@ -50,7 +50,10 @@ class DAO_db_similarity(DAO):
             similarityJSON: similarity, Type: <class 'dict'>
         """
         temp = copy(similarityJSON)
-        self.db_similarities.insert_one(temp)
+        if type(temp) is list:
+            self.db_similarities.insert_many(temp)
+        else:
+            self.db_similarities.insert_one(temp)
 
     def getSimilarities(self):
         """
