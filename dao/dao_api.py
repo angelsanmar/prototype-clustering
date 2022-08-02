@@ -19,6 +19,10 @@ class DAO_api(DAO):
     def getData(self):
         raise ValueError('Incorrect operation. Please use a specific method for the API request')
 
+    def addPerspective(self, ugc):
+        response = requests.post("http://localhost:8080/v1.1/perspective", json=ugc)
+        return response
+
     def responseProcessing(self, response):
         """Process response from API"""
         if response.status_code == 400:

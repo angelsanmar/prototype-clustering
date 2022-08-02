@@ -28,6 +28,7 @@ class Handler(BaseHTTPRequestHandler):
         http://localhost:8090/file/{fileId}                  -> return file with name equal to 'self.path[1:]' -- json
         http://localhost:8090/perspective/all                -> ... -- list
         http://localhost:8090/perspective/{perspectiveId}    -> ... -- json
+        TODO  /perspectives/{perspectiveId}/communities       -> Communities with the same perspective
         http://localhost:8090/index                          -> return json files index (returns only files id) -- list
         """
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
@@ -65,17 +66,24 @@ class Handler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)  # <--- Gets the data itself
         logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
                      str(self.path), str(self.headers), post_data.decode('utf-8'))
-
-        user = loads(post_data.decode('utf-8'))
-        daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
-        ok = daoUsers.insertUser_API(user)
-        if ok:
-            self.__set_response(204)
-            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
+        ok = False
+        request = self.path.split("/")
+        print("Request: ", request)
+        first_arg = request[1]
+        if first_arg == "perspective":
+            perspective = loads(post_data.decode('utf-8'))
+            daoPerspective = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
+            ok = daoPerspective.insertPerspective(perspective)
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
             # </Update Community Model>
-
+        elif first_arg == "users":
+            user = loads(post_data.decode('utf-8'))
+            daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
+            ok = daoUsers.insertUser_API(user)
+        if ok:
+            self.__set_response(204)
+            self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
         else:
             self.__set_response(500)
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))

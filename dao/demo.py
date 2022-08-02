@@ -25,8 +25,7 @@ def main():
     daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
     daoUsers.drop()
 
-    dao = DAO_api()
-    data_set = [
+    user = [
         {
             "id": "11541",
             "userid": "1",
@@ -51,13 +50,44 @@ def main():
         }
     ]
 
+    perspective = {
+            "id": "99",
+            "name": "Perspective_99",
+            "algorithm": {
+                "name": "String",
+                "params": [
+                    "param_a",
+                    "param_b"
+                ]
+            },
+            "similarity_functions": [
+                {
+                    "sim_function": {
+                        "name": "String",
+                        "params": [
+                            "param_a",
+                            "param_b"
+                        ],
+                        "on_attribute": {
+                            "att_name": "String",
+                            "att_type": "String"
+                        },
+                        "weight": 100
+                    }
+                }
+            ]
+    }
+
+    dao = DAO_api()
     # Hacemos post a la API. La API lo guarda en la db
-    response = dao.updateUser(1, data_set)
+    # response = dao.updateUser(1, user)
+    response = dao.addPerspective(perspective)
     print(response.status_code)
 
+
     # Pedimos los datos desde la DAO Users, la DAO lee de db
-    daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
-    print(daoUsers.getUser("1"))
+    # daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
+    # print(daoUsers.getUser("1"))
 
 
 main()
