@@ -24,28 +24,29 @@ class Handler(BaseHTTPRequestHandler):
         """
         _get handler_
         API doc:
-        http://localhost:8090/file/all                       -> return all files -- list
-        http://localhost:8090/file/{fileId}                  -> return file with name equal to 'self.path[1:]' -- json
-        http://localhost:8090/perspective/all                -> ... -- list
-        http://localhost:8090/perspective/{perspectiveId}    -> ... -- json
-        TODO  /perspectives/{perspectiveId}/communities       -> Communities with the same perspective
-        http://localhost:8090/index                          -> return json files index (returns only files id) -- list
+        http://localhost:8090/file/all                                      -> return all files -- list
+        http://localhost:8090/file/{fileId}                                 -> return file with name equal to 'self.path[1:]' -- json
+        http://localhost:8090/perspectives/all                              -> ... -- list
+        http://localhost:8090/perspectives/{perspectiveId}                  -> ... -- json
+        http://localhost:8090/perspectives/{perspectiveId}/communities      -> Communities with the same perspective
+        http://localhost:8090/index                                         -> return json files index (returns only files id) -- list
         """
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         try:
             request = self.path.split("/")
             print("Request: ", request)
             first_arg = request[1]
-            if "file" == first_arg:
+            if first_arg == "file":
                 self.__getFile(request[2])
-            elif "perspective" == first_arg:
-                self.__getPerspertive(request[2])
-            elif "index" == first_arg:
+            elif first_arg == "perspectives":
+                self.__getPerspertives(request)
+            elif first_arg == "index":
                 self.__getIndex()
             else:
                 print("-Error-")
                 self.__set_response(404)
-                self.wfile.write("-Error-\nGET request not defined.\nGET request for {}".format(self.path).encode('utf-8'))
+                self.wfile.write(
+                    "-Error-\nGET request not defined.\nGET request for {}".format(self.path).encode('utf-8'))
         except Exception as e:
             print(e)
             if str(e) != "pymongo.errors.ServerSelectionTimeoutError":
@@ -100,20 +101,32 @@ class Handler(BaseHTTPRequestHandler):
         self.__set_response(200, 'application/json')
         self.wfile.write(dumps(data).encode(encoding='utf_8'))
 
-    def __getPerspertive(self, perspectiveId):
+    def __getPerspertives(self, request):
         dao = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
+        perspectiveId = request[2]
         if perspectiveId == "all":
             data = dao.getPerspectives()
             self.__set_response(200, 'application/json')
             self.wfile.write(dumps(data).encode(encoding='utf_8'))
         else:
-            data = dao.getPerspective(perspectiveId)
-            if data:
+            if len(request) == 4 and request[3] == "communities":
+                # perspectives/{perspectiveId}/communities
+                result = []
+                coms = DAO_db_community("localhost", 27018, "spice", "spicepassword").getCommunities()
+                for com in coms:
+                    if com["perspectiveId"] == perspectiveId:
+                        result.append(com)
                 self.__set_response(200, 'application/json')
-                self.wfile.write(dumps(data).encode(encoding='utf_8'))
+                self.wfile.write(dumps(result).encode(encoding='utf_8'))
             else:
-                self.__set_response(404)
-                self.wfile.write("File not found\nGET request for {}".format(self.path).encode('utf-8'))
+                data = dao.getPerspective(perspectiveId)
+                print(data)
+                if data:
+                    self.__set_response(200, 'application/json')
+                    self.wfile.write(dumps(data).encode(encoding='utf_8'))
+                else:
+                    self.__set_response(404)
+                    self.wfile.write("File not found\nGET request for {}".format(self.path).encode('utf-8'))
 
     def __getFile(self, fileId):
         dao = DAO_db_community("localhost", 27018, "spice", "spicepassword")

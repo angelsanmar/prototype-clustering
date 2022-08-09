@@ -35,7 +35,8 @@ def main():
     # # response = requests.get("http://localhost:8090/perspective/100")
     # # response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
     # # response = requests.get("http://localhost:8090/index")
-    response = requests.get("http://localhost:8080/v1.1/perspectives/Perspective_101/communities")
+    response = requests.get("http://localhost:8090/perspectives/101/communities")
+    response = requests.get("http://localhost:8080/v1.1/perspectives/101/communities")
 
     print(response)
     print(response.text)

@@ -69,7 +69,7 @@ def deleteAndLoad():
     communities = [{
         "community-type": "explicit",
         "name": "elderly",
-        "perspective": "Perspective_101",
+        "perspectiveId": "101",
         "explanation": "People above 65",
         "users": [
             "23",
@@ -78,7 +78,7 @@ def deleteAndLoad():
     }, {
         "community-type": "implicit",
         "explanation": "lorem ipsum",
-        "perspective": "Perspective_101",
+        "perspectiveId": "101",
         "name": "impl_1",
         "users": [
             "44",
@@ -87,7 +87,7 @@ def deleteAndLoad():
     }, {
         "community-type": "explicit",
         "name": "teenager",
-        "perspective": "Perspective_100",
+        "perspectiveId": "100",
         "explanation": "People whose age is between 12 and 17",
         "users": [
             "44",
