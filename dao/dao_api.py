@@ -9,7 +9,7 @@ from dao.dao_class import DAO
 
 class DAO_api(DAO):
     """
-    outdated !!
+    Usada solo para hacer pruebas
     Es la DAO para acceder a la API oficial de Spice.
     """
     def __init__(self, route=""):

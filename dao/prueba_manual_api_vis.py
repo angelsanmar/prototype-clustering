@@ -8,7 +8,7 @@ from dao.dao_csv import DAO_csv
 from dao.dao_json import DAO_json
 from dao.dao_api import DAO_api
 from dao.dao_linkedDataHub import DAO_linkedDataHub
-from dao.deleteAndLoadDefaultData import deleteAndLoad
+# from dao.deleteAndLoadDefaultData import deleteAndLoad
 import json
 
 import requests
@@ -24,19 +24,22 @@ Anadir datos de prueba, por fin finalizar el repositorio y dejarselo a marco
 
 def main():
     # ## Delete old data and load default values
-    deleteAndLoad()
+    # deleteAndLoad()
 
+    # -------------------------------------------------------------
     # ## Pruebas para el POST y el GET. Descomentar el get necesario
     # ## 8090 => local api server
     # ## 8080 => spice api
+    # -------------------------------------------------------------
+
     # # response = requests.post("http://localhost:8090/", json=data_set)
-    # # response = requests.get("http://localhost:8090/json/file0")
-    # # response = requests.get("http://localhost:8090/json/all")
+    # # response = requests.get("http://localhost:8090/file/file0")
+    response = requests.get("http://localhost:8090/file/all")
     # # response = requests.get("http://localhost:8090/perspective/100")
     # # response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
     # # response = requests.get("http://localhost:8090/index")
-    response = requests.get("http://localhost:8090/perspectives/101/communities")
-    response = requests.get("http://localhost:8080/v1.1/perspectives/101/communities")
+    # response = requests.get("http://localhost:8090/perspectives/101/communities")
+    # response = requests.get("http://localhost:8080/v1.1/perspectives/101/communities")
 
     print(response)
     print(response.text)

@@ -51,32 +51,32 @@ def main():
     ]
 
     perspective = {
-            "id": "99",
-            "name": "Perspective_99",
-            "algorithm": {
+          "id": "99",
+          "name": "Perspective_99",
+          "algorithm": {
+            "name": "String",
+            "params": [
+              "param_a",
+              "param_b"
+            ]
+          },
+          "similarity_functions": [
+            {
+              "sim_function": {
                 "name": "String",
                 "params": [
-                    "param_a",
-                    "param_b"
-                ]
-            },
-            "similarity_functions": [
-                {
-                    "sim_function": {
-                        "name": "String",
-                        "params": [
-                            "param_a",
-                            "param_b"
-                        ],
-                        "on_attribute": {
-                            "att_name": "String",
-                            "att_type": "String"
-                        },
-                        "weight": 100
-                    }
-                }
-            ]
-    }
+                  "param_a",
+                  "param_b"
+                ],
+                "on_attribute": {
+                  "att_name": "String",
+                  "att_type": "String"
+                },
+                "weight": 100
+              }
+            }
+          ]
+        }
 
     dao = DAO_api()
     # Hacemos post a la API. La API lo guarda en la db
