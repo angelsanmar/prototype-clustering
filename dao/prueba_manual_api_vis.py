@@ -33,11 +33,11 @@ def main():
     # -------------------------------------------------------------
 
     # # response = requests.post("http://localhost:8090/", json=data_set)
-    # # response = requests.get("http://localhost:8090/file/file0")
-    response = requests.get("http://localhost:8090/file/all")
-    # # response = requests.get("http://localhost:8090/perspective/100")
-    # # response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
-    # # response = requests.get("http://localhost:8090/index")
+    # response = requests.get("http://localhost:8090/file/file0")
+    # response = requests.get("http://localhost:8090/file/all") # 102
+    # response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
+    response = requests.get("http://localhost:8090/perspectives/100")
+    # response = requests.get("http://localhost:8090/index")
     # response = requests.get("http://localhost:8090/perspectives/101/communities")
     # response = requests.get("http://localhost:8080/v1.1/perspectives/101/communities")
 
@@ -46,5 +46,10 @@ def main():
     print(response.status_code)
     print(response.headers)
 
+    # response = requests.get("http://localhost:8080/v1.1/communities/621e53cf0aa6aa7517c2afdd")
+    # print(response)
+    # print(response.text)
+    # print(response.status_code)
+    # print(response.headers)
 
 main()

@@ -12,7 +12,7 @@ from context import dao
 from dao.dao_db_perspectives import DAO_db_perspectives
 from dao.dao_db_users import DAO_db_users
 from dao.dao_db_communities import DAO_db_community
-
+import time
 
 class Handler(BaseHTTPRequestHandler):
 
@@ -24,12 +24,15 @@ class Handler(BaseHTTPRequestHandler):
         """
         _get handler_
         API doc:
-        http://localhost:8090/file/all                                      -> return all files -- list
-        http://localhost:8090/file/{fileId}                                 -> return file with name equal to 'self.path[1:]' -- json
-        http://localhost:8090/perspectives/all                              -> ... -- list
-        http://localhost:8090/perspectives/{perspectiveId}                  -> ... -- json
-        http://localhost:8090/perspectives/{perspectiveId}/communities      -> Communities with the same perspective
+        - GET:
+        http://localhost:8090/file/all                                      -> return all files -- List
+        http://localhost:8090/file/{fileId}                                 -> return the first file with name equal to "fileId" -- JSON
+        http://localhost:8090/perspectives/all                              -> ... -- List
+        http://localhost:8090/perspectives/{perspectiveId}                  -> ... -- JSON
+        http://localhost:8090/perspectives/{perspectiveId}/communities      -> Communities with the same "perspectiveId" -- List
         http://localhost:8090/index                                         -> return json files index (returns only files id) -- list
+        - POST:
+        Used only for redirection of POST requests from API Spice and access DB from here
         """
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         try:
@@ -46,7 +49,7 @@ class Handler(BaseHTTPRequestHandler):
                 print("-Error-")
                 self.__set_response(404)
                 self.wfile.write(
-                    "-Error-\nGET request not defined.\nGET request for {}".format(self.path).encode('utf-8'))
+                    "-Error-\nThis GET request is not defined.\nGET request for {}".format(self.path).encode('utf-8'))
         except Exception as e:
             print(e)
             if str(e) != "pymongo.errors.ServerSelectionTimeoutError":
@@ -132,6 +135,14 @@ class Handler(BaseHTTPRequestHandler):
         dao = DAO_db_community("localhost", 27018, "spice", "spicepassword")
         if fileId == "all":
             data = dao.getFileLists()
+
+            # print("response 102")
+            # # self.__set_response(102, 'application/json')
+            # self.send_response_only(100)
+            # # self.wfile.write(dumps(data).encode(encoding='utf_8'))
+            # print("sleep")
+            # time.sleep(10)
+            # print("response 200")
             self.__set_response(200, 'application/json')
             self.wfile.write(dumps(data).encode(encoding='utf_8'))
         else:

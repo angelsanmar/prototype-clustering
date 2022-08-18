@@ -16,10 +16,59 @@ from requests.auth import HTTPBasicAuth
 
 from bson.json_util import dumps, loads
 
+
 def main():
     deleteAndLoad()
 
+
 def deleteAndLoad():
+
+    users = [
+        {
+            "id": "1",
+            "userid": "23",
+            "origin": "a",
+            "source_id": "b",
+            "source": "c description",
+            "pname": "DemographicGender",
+            "pvalue": "F (for Female value)",
+            "context": "application P:DemographicsPrep",
+            "datapoints": 0
+        },
+        {
+            "id": "2",
+            "userid": "28",
+            "origin": "a",
+            "source_id": "b",
+            "source": "Content description",
+            "pname": "Age",
+            "pvalue": "28",
+            "context": "application P:DemographicsPrep",
+            "datapoints": 0
+        },
+        {
+            "id": "3",
+            "userid": "44",
+            "origin": "90e6d701748f08514b01",
+            "source_id": "90e6d701748f08514b01",
+            "source": "Content description",
+            "pname": "DemographicGender",
+            "pvalue": "M (for Female value)",
+            "context": "application P:DemographicsPrep",
+            "datapoints": 0
+        },
+        {
+            "id": "4",
+            "userid": "56",
+            "origin": "90e6d701748f08514b01",
+            "source_id": "90e6d701748f08514b01",
+            "source": "Content description",
+            "pname": "Age",
+            "pvalue": "56",
+            "context": "application P:DemographicsPrep",
+            "datapoints": 0
+        }]
+
     perspectives = [{
         "id": "100",
         "name": "Perspective_100",
@@ -67,6 +116,7 @@ def deleteAndLoad():
     }]
 
     communities = [{
+        "id": "621e53cf0aa6aa7517c2afdd",
         "community-type": "explicit",
         "name": "elderly",
         "perspectiveId": "101",
@@ -76,6 +126,7 @@ def deleteAndLoad():
             "28"
         ],
     }, {
+        "id": "721e53cf0aa6aa7517c2afdd",
         "community-type": "implicit",
         "explanation": "lorem ipsum",
         "perspectiveId": "101",
@@ -85,6 +136,7 @@ def deleteAndLoad():
             "23"
         ]
     }, {
+        "id": "821e53cf0aa6aa7517c2afdd",
         "community-type": "explicit",
         "name": "teenager",
         "perspectiveId": "100",
@@ -127,6 +179,7 @@ def deleteAndLoad():
         "value": 0.563,
     }]
 
+    print("Starting.")
     daoP = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
     daoP.drop()
     daoP.insertPerspective(perspectives)
@@ -138,6 +191,7 @@ def deleteAndLoad():
     daoS = DAO_db_similarity("localhost", 27018, "spice", "spicepassword")
     daoS.drop()
     daoS.insertSimilarity(similarities)
+    print("Finished.")
 
 
 main()
