@@ -37,7 +37,7 @@ class Handler(BaseHTTPRequestHandler):
         logging.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         try:
             request = self.path.split("/")
-            print("Request: ", request)
+            print("Request GET: ", request)
             first_arg = request[1]
             if first_arg == "file":
                 self.__getFile(request[2])
@@ -51,6 +51,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write(
                     "-Error-\nThis GET request is not defined.\nGET request for {}".format(self.path).encode('utf-8'))
         except Exception as e:
+            print("-Error-")
             print(e)
             if str(e) != "pymongo.errors.ServerSelectionTimeoutError":
                 self.__set_response(500)
@@ -72,7 +73,7 @@ class Handler(BaseHTTPRequestHandler):
                      str(self.path), str(self.headers), post_data.decode('utf-8'))
         ok = False
         request = self.path.split("/")
-        print("Request: ", request)
+        print("Request POST: ", request)
         first_arg = request[1]
         if first_arg == "perspective":
             perspective = loads(post_data.decode('utf-8'))
@@ -85,6 +86,12 @@ class Handler(BaseHTTPRequestHandler):
             user = loads(post_data.decode('utf-8'))
             daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
             ok = daoUsers.insertUser_API(user)
+        elif first_arg == "update_CM":
+            # data = loads(post_data.decode('utf-8'))
+            print("update_CM")
+            # <Update Community Model>
+            # TODO: Hacer Llamada al Community Model
+            # </Update Community Model>
         if ok:
             self.__set_response(204)
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
