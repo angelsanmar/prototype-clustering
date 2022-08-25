@@ -81,7 +81,10 @@ class DAO_db_community(DAO):
             File List
         """
         data = self.db_fullListCommunities.find({"fileId": fileId}, {"_id": 0})
-        return loads(dumps(list(data)))
+        data = loads(dumps(list(data)))
+        if len(data) == 0:
+            return {}
+        return data[0]
 
     def getFileLists(self):
         """

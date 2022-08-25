@@ -25,6 +25,7 @@ def main():
 
     dao.drop()
     user1 = {
+        "id": "hola",
         "userid": "001",
         "origin": "aaa",
         "source_id": "bbb",
@@ -33,6 +34,7 @@ def main():
         "hobby": "bwm"
     }
     user2 = {
+        "id": "hola",
         "userid": "001",
         "origin": "aaa",
         "source_id": "bbb",
@@ -41,14 +43,15 @@ def main():
         "religion": "AA"
     }
     correctResponse = {
+        "id": "hola",
         'userid': '001',
         'origin': 'aaa',
         'source_id': 'bbb',
         'hobby': 'bwm',
         'gender': 'M',
         'age': '19',
-        'religion': 'AA',
-        '_id': "xxx"
+        'religion': 'AA'
+        # ,'_id': "xxx"
     }
     dao.insertUser(user1)
     print(dao.getUsers())

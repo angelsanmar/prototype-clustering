@@ -29,13 +29,13 @@ class DAO_db_users(DAO):
 
         self.db_users = self.mongo.spiceComMod.users
         self.template = {
-            "ugc_id": "xxx",
+            "id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx"
         }
         self.templateFull = {
-            "ugc_id": "xxx",
+            "id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx",
@@ -46,7 +46,7 @@ class DAO_db_users(DAO):
             "datapoints": "xxx"  # Not required
         }
         self.templateWithoutP = {
-            "ugc_id": "xxx",
+            "id": "xxx",
             "userid": "xxx",
             "origin": "xxx",
             "source_id": "xxx",
@@ -72,12 +72,12 @@ class DAO_db_users(DAO):
         user = copy(userJSON)
         userTemplate = copy(self.template)
         # anadimos los campos necesarios
-        # si es un id (viene del ugc) entonces lo guardamos con otro nombre
+        # si es un id (viene del ugc) entonces lo guardamos
         # si es un _id (viene de mongodb) entonces lo ignoramos
         for key in user.keys():
             if key in self.template.keys():
                 if key == "id":
-                    userTemplate["ugc_id"] = user[key]
+                    userTemplate["id"] = user[key]
                 elif key != "_id":
                     userTemplate[key] = user[key]
 
@@ -140,13 +140,13 @@ class DAO_db_users(DAO):
         else:
             user = self.template.copy()
             # campos obligatorios
-            user["_id"] = data[0]["_id"]
+            # user["_id"] = data[0]["_id"]
             user["userid"] = data[0]["userid"]
             user["origin"] = data[0]["origin"]
             user["source_id"] = data[0]["source_id"]
             # campos no obligatorios
-            if "ugc_id" in data[0]:  # temporal mente lo puse aqui
-                user["ugc_id"] = data[0]["ugc_id"]
+            if "id" in data[0]:  # temporalmente lo puse aqui
+                user["id"] = data[0]["id"]
             if "source" in data[0]:
                 user["source"] = data[0]["source"]
             if "context" in data[0]:

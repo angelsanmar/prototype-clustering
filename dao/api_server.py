@@ -82,7 +82,7 @@ class Handler(BaseHTTPRequestHandler):
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
             # </Update Community Model>
-        elif first_arg == "users":
+        elif first_arg == "updateUsers":
             user = loads(post_data.decode('utf-8'))
             daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
             ok = daoUsers.insertUser_API(user)
