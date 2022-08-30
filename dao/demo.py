@@ -81,8 +81,8 @@ def main():
     dao = DAO_api()
     # Hacemos post a la API. La API lo guarda en la db
     # response = dao.updateUser(1, user)
-    # response = dao.addPerspective(perspective)
-    response = dao.updateUser("1", user)
+    response = dao.addPerspective(perspective)
+    # response = dao.updateUser("1", user)
     print(response.status_code)
 
 

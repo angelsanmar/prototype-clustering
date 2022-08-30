@@ -13,8 +13,9 @@ users felt watching artworks (information saved in users_emotions.json).
 
 Usage:
 - Execute Docker from `community-model-api`
-- Execute **_api_server.py_**
+- Execute `api_server/api_server.py`
 
-`requierements.txt` y `requierements_conda.txt`:
-- En teoria para ejecutar la _API server loader_ solo haria falta importar el `requierements.txt`. El de conda es mas completo y contiene dependencias que 
-estaban antes en el proyecto y seran necesarias para clustering.
+Requierements:
+- Solo usar el `requierements.txt`
+
+El fichero `requierements_conda.txt` es obsoleto y hay que actualizarlo, es para el CM

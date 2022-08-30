@@ -36,17 +36,18 @@ def main():
     # response = requests.get("http://localhost:8090/file/file0")
     # response = requests.get("http://localhost:8090/file/all") # 102
     # response = requests.get("http://localhost:8090/thisRequestShouldReturn404Error")
-    response = requests.get("http://localhost:8090/perspectives/100")
-    # response = requests.get("http://localhost:8090/index")
+    # response = requests.get("http://localhost:8090/perspectives/100")
+    response = requests.get("http://localhost:8090/file/agglomerativeClusteringGAM_light")
     # response = requests.get("http://localhost:8090/perspectives/101/communities")
     # response = requests.get("http://localhost:8080/v1.1/perspectives/101/communities")
-
+    # response = requests.get("http://localhost:8080/v1.1/communities")
     print(response)
     print(response.text)
     print(response.status_code)
     print(response.headers)
 
-    # response = requests.get("http://localhost:8080/v1.1/communities/621e53cf0aa6aa7517c2afdd")
+    print("________________________________")
+    # response = requests.get("http://localhost/102")
     # print(response)
     # print(response.text)
     # print(response.status_code)

@@ -14,11 +14,14 @@ from dao.dao_db_users import DAO_db_users
 from dao.dao_db_communities import DAO_db_community
 import time
 
+API_PORT = 8090
+
 class Handler(BaseHTTPRequestHandler):
 
     # TODO:
-    # + timeout
     # - incorrect path or filename
+    # - create thread for each connection/request
+    # - refactor code
 
     def do_GET(self):
         """
@@ -81,6 +84,7 @@ class Handler(BaseHTTPRequestHandler):
             ok = daoPerspective.insertPerspective(perspective)
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
+            # Esta hecho, solo que falta juntarlo
             # </Update Community Model>
         elif first_arg == "updateUsers":
             user = loads(post_data.decode('utf-8'))
@@ -91,6 +95,7 @@ class Handler(BaseHTTPRequestHandler):
             print("update_CM")
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
+            # Esta hecho, solo que falta juntarlo
             # </Update Community Model>
         if ok:
             self.__set_response(204)
@@ -142,14 +147,6 @@ class Handler(BaseHTTPRequestHandler):
         dao = DAO_db_community("localhost", 27018, "spice", "spicepassword")
         if fileId == "all":
             data = dao.getFileLists()
-
-            # print("response 102")
-            # # self.__set_response(102, 'application/json')
-            # self.send_response_only(100)
-            # # self.wfile.write(dumps(data).encode(encoding='utf_8'))
-            # print("sleep")
-            # time.sleep(10)
-            # print("response 200")
             self.__set_response(200, 'application/json')
             self.wfile.write(dumps(data).encode(encoding='utf_8'))
         else:
@@ -162,7 +159,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write("File not found\nGET request for {}".format(self.path).encode('utf-8'))
 
 
-def run(server_class=HTTPServer, handler_class=Handler, port=8090):
+def run(server_class=HTTPServer, handler_class=Handler, port=API_PORT):
     logging.basicConfig(level=logging.INFO)
     server_address = ('localhost', port)
     httpd = server_class(server_address, handler_class)
