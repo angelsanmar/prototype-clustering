@@ -12,7 +12,11 @@ from context import dao
 from dao.dao_db_perspectives import DAO_db_perspectives
 from dao.dao_db_users import DAO_db_users
 from dao.dao_db_communities import DAO_db_community
+from dao.dao_json import DAO_json
+from dao.deleteAndLoadDefaultData import deleteAndLoad
 import time
+
+
 
 API_PORT = 8090
 
@@ -172,8 +176,23 @@ def run(server_class=HTTPServer, handler_class=Handler, port=API_PORT):
     logging.info('Stopping httpd...\n')
 
 
+def importData():
+    json5 = DAO_json("data/5.json")
+    json5 = json5.getData()
+    json6 = DAO_json("data/6.json").getData()
+    jsonAll = DAO_json("data/Allperspectives.json").getData()
+
+    daoC = DAO_db_community("localhost", 27018, "spice", "spicepassword")
+    daoC.insertFileList("5", json5)
+    daoC.insertFileList("6", json6)
+    daoP = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
+    daoP.insertPerspective(jsonAll)
+
 if __name__ == '__main__':
     from sys import argv
+
+    deleteAndLoad()
+    importData()
 
     if len(argv) == 2:
         run(port=int(argv[1]))

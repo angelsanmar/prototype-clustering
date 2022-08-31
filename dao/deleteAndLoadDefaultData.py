@@ -186,6 +186,7 @@ def deleteAndLoad():
 
     daoC = DAO_db_community("localhost", 27018, "spice", "spicepassword")
     daoC.drop()
+    daoC.dropFullList()
     daoC.insertCommunity(communities)
 
     daoS = DAO_db_similarity("localhost", 27018, "spice", "spicepassword")
