@@ -8,6 +8,7 @@ from dao.dao_db_similarities import DAO_db_similarity
 from dao.dao_csv import DAO_csv
 from dao.dao_json import DAO_json
 from dao.dao_api import DAO_api
+from dao.dao_db_flags import DAO_db_flags
 from dao.dao_linkedDataHub import DAO_linkedDataHub
 import json
 
@@ -53,13 +54,21 @@ def main():
         'religion': 'AA'
         # ,'_id': "xxx"
     }
-    dao.insertUser(user1)
-    print(dao.getUsers())
-    print(dao.getUser("001"))
-    dao.updateUser(dao.getUser("001"))
-
+    # dao.insertUser(user1)
+    # print(dao.getUsers())
     # print(dao.getUser("001"))
-    print(dao.getUsers())
+    # dao.updateUser(dao.getUser("001"))
+    #
+    # # print(dao.getUser("001"))
+    # print(dao.getUsers())
+
+    daoF = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
+    daoF.insertFlag(False)
+    data = daoF.getFlag()
+    print(data)
+    daoF.invertFlag()
+    data = daoF.getFlag()
+    print(data)
 
 
 main()

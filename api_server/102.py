@@ -12,21 +12,14 @@ from context import dao
 from dao.dao_db_perspectives import DAO_db_perspectives
 from dao.dao_db_users import DAO_db_users
 from dao.dao_db_communities import DAO_db_community
-from dao.dao_db_flags import DAO_db_flags
-from dao.dao_json import DAO_json
-from dao.deleteAndLoadDefaultData import deleteAndLoad
 import time
-
-
-
-API_PORT = 8090
 
 class Handler(BaseHTTPRequestHandler):
 
     # TODO:
+    # + timeout
     # - incorrect path or filename
-    # - create thread for each connection/request
-    # - refactor code
+
 
     def do_GET(self):
         """
@@ -53,6 +46,34 @@ class Handler(BaseHTTPRequestHandler):
                 self.__getPerspertives(request)
             elif first_arg == "index":
                 self.__getIndex()
+            elif first_arg == "update_CM":
+                # data = loads(post_data.decode('utf-8'))
+                print("update_CM")
+                # <Update Community Model>
+                # TODO: Hacer Llamada al Community Model
+                # </Update Community Model>
+
+                print("updating CM...")
+                # self.__set_response(102, 'application/json')
+                print("response 102")
+                # self.send_response_only(102)
+                # self.end_headers()
+                # # self.wfile.write(dumps(data).encode(encoding='utf_8'))
+                # print("sleep")
+                for i in range(4):
+                    print(".")
+                    time.sleep(1)
+                    self.send_response_only(100)
+                    self.end_headers()
+
+                print("...CM ready")
+                print("response 200")
+
+                # self.send_response_only(200)
+                self.send_header('Content-type', 'text')
+                self.send_response(200, "POST request for {}".format(self.path).encode('utf-8'))
+                # self.end_headers()
+                # self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
             else:
                 print("-Error-")
                 self.__set_response(404)
@@ -63,7 +84,7 @@ class Handler(BaseHTTPRequestHandler):
             print(e)
             if str(e) != "pymongo.errors.ServerSelectionTimeoutError":
                 self.__set_response(500)
-                self.wfile.write("-Error-\nGET request for {}".format(self.path).encode('utf-8'))
+                self.wfile.write("-Exception-\nGET request for {}".format(self.path).encode('utf-8'))
                 # raise
             else:
                 self.__set_response(500)
@@ -89,7 +110,6 @@ class Handler(BaseHTTPRequestHandler):
             ok = daoPerspective.insertPerspective(perspective)
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
-            # Esta hecho, solo que falta juntarlo
             # </Update Community Model>
         elif first_arg == "updateUsers":
             user = loads(post_data.decode('utf-8'))
@@ -100,15 +120,28 @@ class Handler(BaseHTTPRequestHandler):
             print("update_CM")
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
-            # Esta hecho, solo que falta juntarlo
             # </Update Community Model>
-            daoF = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
-            daoF.invertFlag()
-            time.sleep(10)
-            daoF.invertFlag()
 
+            print("updating CM...")
+            # self.__set_response(102, 'application/json')
+
+            print("response 102")
+            self.send_response_only(102)
+            self.end_headers()
+            # self.wfile.write(dumps(data).encode(encoding='utf_8'))
+            print("sleep")
+            for i in range(5):
+                print(".")
+                time.sleep(1)
+                self.send_response_only(102)
+                self.end_headers()
+
+            print("...CM ready")
+            print("response 200")
+
+            ok = True
         if ok:
-            self.__set_response(204)
+            self.__set_response(200, 'text/html')
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
         else:
             self.__set_response(500)
@@ -169,7 +202,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.write("File not found\nGET request for {}".format(self.path).encode('utf-8'))
 
 
-def run(server_class=HTTPServer, handler_class=Handler, port=API_PORT):
+def run(server_class=HTTPServer, handler_class=Handler, port=8090):
     logging.basicConfig(level=logging.INFO)
     server_address = ('localhost', port)
     httpd = server_class(server_address, handler_class)
@@ -182,27 +215,8 @@ def run(server_class=HTTPServer, handler_class=Handler, port=API_PORT):
     logging.info('Stopping httpd...\n')
 
 
-def importData():
-    json5 = DAO_json("data/5.json")
-    json5 = json5.getData()
-    json6 = DAO_json("data/6.json").getData()
-    jsonAll = DAO_json("data/Allperspectives.json").getData()
-
-    daoC = DAO_db_community("localhost", 27018, "spice", "spicepassword")
-    daoC.insertFileList("5", json5)
-    daoC.insertFileList("6", json6)
-    daoP = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
-    daoP.insertPerspective(jsonAll)
-
-    daoF = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
-    daoF.drop()
-    daoF.insertFlag(True)
-
 if __name__ == '__main__':
     from sys import argv
-
-    deleteAndLoad()
-    importData()
 
     if len(argv) == 2:
         run(port=int(argv[1]))
