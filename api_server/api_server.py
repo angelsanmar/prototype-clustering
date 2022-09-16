@@ -14,10 +14,10 @@ from dao.dao_db_users import DAO_db_users
 from dao.dao_db_communities import DAO_db_community
 from dao.dao_db_flags import DAO_db_flags
 from dao.dao_json import DAO_json
-from dao.deleteAndLoadDefaultData import deleteAndLoad
+#from dao.deleteAndLoadDefaultData import deleteAndLoad
 import time
 
-
+from communityModel.hecht import CommunityModel
 
 API_PORT = 8090
 
@@ -92,9 +92,23 @@ class Handler(BaseHTTPRequestHandler):
             # Esta hecho, solo que falta juntarlo
             # </Update Community Model>
         elif first_arg == "updateUsers":
-            user = loads(post_data.decode('utf-8'))
+            users = loads(post_data.decode('utf-8'))
             daoUsers = DAO_db_users("localhost", 27018, "spice", "spicepassword")
-            ok = daoUsers.insertUser_API(user)
+            ok = daoUsers.insertUser_API(users)
+            
+            # Activate flags associated to user/perspective pair (perspective makes use of one of the user's attributes (pname))
+            daoPerspectives = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
+            daoFlags = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
+            
+            perspectives = daoPerspectives.getPerspectives()
+            
+            for user in users:
+                for perspective in perspectives:
+                    for similarityFunction in perspective['similarity_functions']:
+                        if (similarityFunction['sim_function']['on_attribute']['att_name'] == user['pname']):
+                            flag = {'perspective': perspective['id'], 'userid': user['userid'], 'flag': True}
+                            daoFlags.updateFlag(flag)
+
         elif first_arg == "update_CM":
             # data = loads(post_data.decode('utf-8'))
             print("update_CM")
@@ -102,11 +116,31 @@ class Handler(BaseHTTPRequestHandler):
             # TODO: Hacer Llamada al Community Model
             # Esta hecho, solo que falta juntarlo
             # </Update Community Model>
-            daoF = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
-            daoF.invertFlag()
-            time.sleep(10)
-            daoF.invertFlag()
-
+            
+            # UPDATE CM 
+            
+            # Check if there is an update flag
+            daoPerspectives = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
+            daoFlags = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
+            
+            flags = daoFlags.getFlags()
+            for flag in flags:
+                perspective = daoPerspectives.getPerspective(flag.perspective)
+                print("community model start")
+                                
+                # Call to the community model
+                communityModel = CommunityModel(perspective)
+                communityModel.start()
+                
+                print("community model end")
+                
+                # Remove flag
+                daoFlags.deleteFlag(flag)
+            
+            # END UPDATE CM
+            ok = True
+                
+            
         if ok:
             self.__set_response(204)
             self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
@@ -194,15 +228,11 @@ def importData():
     daoP = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
     daoP.insertPerspective(jsonAll)
 
-    daoF = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
-    daoF.drop()
-    daoF.insertFlag(True)
-
 if __name__ == '__main__':
     from sys import argv
 
-    deleteAndLoad()
-    importData()
+    #deleteAndLoad()
+    #importData()
 
     if len(argv) == 2:
         run(port=int(argv[1]))
