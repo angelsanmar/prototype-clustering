@@ -35,7 +35,7 @@ class ExplainedCommunitiesDetection:
         """
         n_communities = 2
         finish_search = False
-        
+
         while not finish_search:
             community_detection = self.algorithm(self.data)
             result = community_detection.calculate_communities(metric=self.similarity, n_clusters=n_communities)
@@ -51,9 +51,15 @@ class ExplainedCommunitiesDetection:
                 explainables.append(self.is_explainable(community, answer_binary, percentage))
 
             finish_search = sum(explainables) == n_communities
-            
+
             if not finish_search:
                 n_communities += 1
+
+
+        # added now to fix it
+        self.algorithmInit = community_detection
+        
+        
         
         return n_communities, result
 
@@ -74,22 +80,36 @@ class ExplainedCommunitiesDetection:
                     the common value in this column.
         """
         community = self.communities.get_group(id_community)
+       # print(community.columns.values)
+
 
         community_data = {'name': id_community}
         community_data['percentage'] = percentage
         community_data['members'] = list(community.index.values)
 
         community_data['properties'] = dict()       
+        
+        #print(community)
+        #print(community.columns)
+       
 
         for col in community.columns.values:
             if col != 'community':
+               # print(community)
+                #print(len(community[col]))
+                #print('-', col, community[col].value_counts().index[0])
                 if answer_binary:
                     if (len(community[col]) * percentage) <= community[col].sum():
                         community_data['properties'][col] = community[col].value_counts().index[0]
+                        # print('-', col, community[col].value_counts().index[0])
                 else:
                     
                     if (len(community[col]) * percentage) <= community[col].value_counts().max():
                         community_data['properties'][col] = community[col].value_counts().index[0]
+                        # Add the predominant emotion
+                        #print('-', col, community[col].value_counts().index[0])
+                        
+                        # print('-', col, community[col].value_counts().index[0])
 
         return community_data
 
@@ -105,5 +125,11 @@ class ExplainedCommunitiesDetection:
         
         return explainable_community
         
-
+    def communityCentroid(self,communityId):
+        print("fdsdfsdf")
+        print(self.algorithmInit)
+        print(communityId)
+        return self.algorithmInit.communityCentroid(communityId)
+        
+        
         
