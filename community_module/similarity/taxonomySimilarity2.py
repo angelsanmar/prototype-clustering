@@ -4,7 +4,10 @@ import networkx as nx
 from community_module.similarity.similarity import Similarity
 from community_module.similarity.taxonomies.taxonomy import Taxonomy
 
-class TaxonomySimilarity(Similarity):
+
+# Calculates similarity between 2 artworks
+
+class TaxonomySimilarity2(Similarity):
     
     def __init__(self, data):
         """Construct of TaxonomySimilarity objects.

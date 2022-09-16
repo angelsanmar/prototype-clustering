@@ -12,7 +12,7 @@ from community_module.similarity.similarity import Similarity
 PLUTCHIK_EMOTIONS = ['anger', 'anticipation', 'joy', 'trust', 'fear', 'surprise', 'sadness', 'disgust']
 #'disgust', 'fear', 'sadness', 'surprise', 'trust'] # Falta incluir 'joy'
 
-class EmotionSimilarity(Similarity):
+class PlutchickEmotionSimilarity(EmotionSimilarity):
 
     def __init__(self, data):
         """Construct of EmotionSimilarity objects.

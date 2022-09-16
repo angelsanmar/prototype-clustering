@@ -1,25 +1,29 @@
-# Authors: Guillermo Jimenez-Díaz
-#          Jose Luis Jorro-Aragoneses
-#          José Ángel Sánchez Martín
+# Authors: José Ángel Sánchez Martín
 
 from itertools import product
 import numpy as np
 
-class Similarity:
+
+class SimilarityDAO:
     """Class to define the functions to be implemented to calculate
     the similarity between elements.
     """
     
-    def __init__(self,data):
+    def __init__(self,dao):
         """Construct of Similarity objects.
 
         Parameters
         ----------
-        data : pd.DataFrame
-            Dataframe where index is ids of elements
+        dao : dao object class
+            DAO which processes and provides the data required by the similarity measure.
         
         """
-        self.data = data
+        self.dao = dao
+        #self.data = self.dao.pandasData()
+
+        self.data = self.dao.getPandasDataframe()
+        #self.data = self.data.dropna()
+        
 
     def distance(self,elemA, elemB):
         """Method to obtain the distance between two element.
@@ -53,8 +57,7 @@ class Similarity:
         double
             Distance between the two elements.
         """
-        #pass
-        return 1 - self.distance(elemA,elemB)
+        pass
 
     def matrix_distance(self):
         """Method to calculate the matrix of distance between all element included in data.
@@ -66,17 +69,20 @@ class Similarity:
         """
         users = self.data.index
         pairs = product(range(len(users)), repeat=2)
-
+        
+        # This checks 0,1 and 1,0
+        # Change it to only check 0,1 and assign the same to 1,0
         matrix = np.zeros((len(users), len(users)))
         for p in pairs:
             dist = self.distance(users[p[0]], users[p[1]])
             matrix[p[0], p[1]] = dist
 
+
         # Reduce the matrix to 2 decimals
         matrix = np.round(matrix,2)
         
         self.distanceMatrix = matrix
-        
+
         return matrix
 
     def matrix_similarity(self):
