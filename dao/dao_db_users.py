@@ -236,3 +236,39 @@ class DAO_db_users(DAO):
             Deletes all data in collection
         """
         self.db_users.delete_many({})
+
+    def userToPostAPIFormat(self, userJSON):
+        """
+        Splits user json object into their attribute components
+        according to the user model format
+
+        Parameters
+        ----------
+        userJSON : json object encoding a citizen.
+            
+        """
+
+        
+        user = copy(userJSON)
+        userTemplate = copy(self.template)
+        # anadimos los campos necesarios
+        # si es un id (viene del ugc) entonces lo guardamos con otro nombre
+        # si es un _id (viene de mongodb) entonces lo ignoramos
+        for key in user.keys():
+            if key in self.template.keys():
+                if key == "id":
+                    userTemplate["ugc_id"] = user[key]
+                elif key != "_id":
+                    userTemplate[key] = user[key]
+
+        items = (user.keys() - self.template.keys())
+        usersAPI = []
+        for item in items:
+            userWithP = copy(userTemplate)
+            userWithP["pname"] = item
+            userWithP["pvalue"] = user[item]
+            usersAPI.append(userWithP)
+        
+        return usersAPI
+
+

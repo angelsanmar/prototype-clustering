@@ -36,49 +36,60 @@ class DAO_db_flags(DAO):
 
     def getData(self):
         pass
-
-    def insertFlag(self, value):
-        data = {"flag": value}
-
-        self.db_flags.insert_one(data)
-
+    
 
     def getFlag(self):
         """
         :Return:
-            List with all users, Type: json List[<class 'dict'>]
+            List with all flags, Type: json List[<class 'dict'>]
         """
         # data = self.db_users.find({}, {"_id": 0})
         dataList = self.db_flags.find({})
         dataList = loads(dumps(list(dataList)))
         return dataList[0]
 
-
-
-    def invertFlag(self):
+    def deleteFlag(self, flagJSON):
         """
         :Parameters:
-            newJSON: User/s, Type: <class 'dict'> OR List[<class 'dict'>]
+            flagJSON: Flag/s, Type: <class 'dict'> OR List[<class 'dict'>]
         """
-        data = self.getFlag()
-        self.drop()
-        if data["flag"] == True:
-            self.insertFlag(False)
-        else:
-            self.insertFlag(True)
-
-
-
-
-    def deleteFlag(self, userId):
-        """
-        :Parameters:
-            userId: User id, Type: <class 'str'>
-        """
-        self.db_flags.delete_many({"userid": userId})
+        self.db_flags.delete_one(flagJSON)
+        
 
     def drop(self):
         """
             Deletes all data in collection
         """
         self.db_flags.delete_many({})
+
+    def insertFlag(self, flagJSON):
+        """
+        :Parameters:
+            flagJSON: flag associated to the perspective and the user.
+        """
+        temp = copy(flagJSON)
+        if type(temp) is list:
+            self.db_flags.insert_many(temp)
+        else:
+            self.db_flags.insert_one(temp)
+            
+    def updateFlag(self, flagJSON):
+        key = {'perspective': flagJSON['perspective'], 'userid': flagJSON['userid']}
+        self.db_flags.update_one(key,{"$set": flagJSON},upsert=True)
+ 
+    def getFlags(self):
+        """
+        :Return:
+            flags, Type: List[<class 'dict'>]
+        """
+        data = self.db_flags.find({}, {"_id": 0})
+        return loads(dumps(list(data)))
+        
+    def deleteFlag(self, flagId):
+        """
+        :Parameters:
+            flagId: Type: <class 'str'>
+        """
+        self.db_flags.delete_one({'id': flagId})
+        
+        
