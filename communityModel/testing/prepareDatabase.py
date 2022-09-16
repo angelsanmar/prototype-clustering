@@ -17,7 +17,6 @@ import json
 def clear():
     daoF = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
     daoF.drop()
-    #daoF.insertFlag(True)
     
     daoC = DAO_db_community("localhost", 27018, "spice", "spicepassword")
     daoC.drop()
@@ -37,55 +36,3 @@ def initialize():
 
 clear()
 #initialize()
-
-[{'_id': {'$oid': '6323135a0215baeff4a9220b'}, 'id': '1', 'name': 'HEHCT Perspective', 'algorithm': {'name': 'agglomerative', 'params': []}, 'similarity_functions': [{'sim_function': {'name': 'HechtBeliefRSimilarityDAO', 'params': [], 'on_attribute': {'att_name': 'beleifR', 'att_type': 'String'}, 'weight': 0.8}}, {'sim_function': {'name': 'HechtBeliefJSimilarityDAO', 'params': [], 'on_attribute': {'att_name': 'beliefJ', 'att_type': 'String'}, 'weight': 0.6}}, {'sim_function': {'name': 'HechtDemographicReligiousSimilarityDAO', 'params': [], 'on_attribute': {'att_name': 'DemographicReligous', 'att_type': 'String'}, 'weight': 0.2}}, {'sim_function': {'name': 'HechtDemographicPoliticsSimilarityDAO', 'params': [], 'on_attribute': {'att_name': 'DemographicPolitics', 'att_type': 'String'}, 'weight': 0.2}}]}]
-
-
-perspectives = [{
-        "id": "100",
-        "name": "Perspective_100",
-        "algorithm": {
-            "name": "String",
-            "params": [
-                "param_a", "param_b"
-            ]
-        },
-        "similarity_functions": [{
-            "sim_function": {
-                "name": "String",
-                "params": [
-                    "param_a", "param_b"
-                ],
-                "on_attribute": {
-                    "att_name": "String",
-                    "att_type": "String"
-                },
-                "weight": 100
-            }
-        }]
-    }, {
-        "id": "101",
-        "name": "Perspective_101",
-        "algorithm": {
-            "name": "String",
-            "params": [
-                "param_a", "param_b"
-            ]
-        },
-        "similarity_functions": [{
-            "sim_function": {
-                "name": "String",
-                "params": [
-                    "param_a", "param_b"
-                ],
-                "on_attribute": {
-                    "att_name": "String",
-                    "att_type": "String"
-                },
-                "weight": 101
-            }
-        }]
-    }]
-    
-    
-    
