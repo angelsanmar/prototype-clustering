@@ -7,6 +7,9 @@ from dao.dao_class import DAO
 
 
 class DAO_json(DAO):
+    """
+        DAO used to extract data from JSON files
+    """
 
     def __init__(self, path):
         """

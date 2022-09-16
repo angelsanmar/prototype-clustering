@@ -7,7 +7,9 @@ from dao.dao_class import DAO
 
 
 class DAO_csv(DAO):
-
+    """
+    DAO for extracting data from csv files
+    """
     def __init__(self, path):
         """
         :Parameters:

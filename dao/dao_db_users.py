@@ -10,6 +10,10 @@ from pymongo import MongoClient
 
 
 class DAO_db_users(DAO):
+    """
+        DAO for accessing users related data in MongoDB
+        Contains basics CRUD operaions
+    """
 
     def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """
@@ -60,6 +64,7 @@ class DAO_db_users(DAO):
 
     def insertUser(self, userJSON):
         """
+        Inserts user or list of users
         :Parameters:
             userJSON: JSON value, Type: json <class 'dict'> OR List(<class 'dict'>)
         """
@@ -69,6 +74,9 @@ class DAO_db_users(DAO):
             self.__insertOne(userJSON)
 
     def __insertOne(self, userJSON):
+        """
+            For every value that the user has, it inserts one document with that value as pname and pvalue
+        """
         user = copy(userJSON)
         userTemplate = copy(self.template)
         # anadimos los campos necesarios
@@ -161,6 +169,8 @@ class DAO_db_users(DAO):
 
     def updateUser(self, newJSON):
         """
+        Updates old values and add new if necessary
+
         :Parameters:
             newJSON: User/s, Type: <class 'dict'> OR List[<class 'dict'>]
         """
@@ -192,6 +202,8 @@ class DAO_db_users(DAO):
     # # Realiza casi lo mismo que el update, solo que cambia completamente todos los valores, no solo los campos P
     def replaceUser(self, newJSON):
         """
+        Replaces all values (deletes the old one and creates a new one)
+
         :Parameters:
             newJSON: User/s, Type: <class 'dict'> OR List[<class 'dict'>]
         """

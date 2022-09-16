@@ -11,6 +11,9 @@ from pymongo import MongoClient
 
 
 class DAO_db_flags(DAO):
+    """
+    DAO for accessing flag related data in MongoDB
+    """
 
     def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """

@@ -16,6 +16,9 @@ from requests.auth import HTTPBasicAuth
 
 from bson.json_util import dumps, loads
 
+"""
+Script used to load some default data
+"""
 
 def main():
     deleteAndLoad()

@@ -9,6 +9,10 @@ from dao.dao_class import DAO
 
 
 class DAO_db_community(DAO):
+    """
+    DAO for accessing community related data in MongoDB
+    Contains basics CRUD operations and some operations to manage 'Files'
+    """
 
     def __init__(self, MONGO_HOST="localhost", MONGO_PORT=27018, MONGO_USER="", MONGO_PASS="", MONGO_DB="spiceComMod"):
         """
