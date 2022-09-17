@@ -122,12 +122,14 @@ class Handler(BaseHTTPRequestHandler):
             # Check if there is an update flag
             daoPerspectives = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
             daoFlags = DAO_db_flags("localhost", 27018, "spice", "spicepassword")
-            
+
             flags = daoFlags.getFlags()
             for flag in flags:
-                perspective = daoPerspectives.getPerspective(flag.perspective)
+                print(flag)
+                perspective = daoPerspectives.getPerspective(flag["perspectiveId"])
                 print("community model start")
-                                
+
+                print("data from post requets: ", post_data)
                 # Call to the community model
                 communityModel = CommunityModel(perspective)
                 communityModel.start()
