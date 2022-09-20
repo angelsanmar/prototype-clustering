@@ -17,7 +17,9 @@ from dao.dao_json import DAO_json
 #from dao.deleteAndLoadDefaultData import deleteAndLoad
 import time
 
-from communityModel.hecht import CommunityModel
+from communityModel.communityModel import CommunityModel
+
+import json
 
 API_PORT = 8090
 
@@ -106,11 +108,12 @@ class Handler(BaseHTTPRequestHandler):
                 for perspective in perspectives:
                     for similarityFunction in perspective['similarity_functions']:
                         if (similarityFunction['sim_function']['on_attribute']['att_name'] == user['pname']):
-                            flag = {'perspective': perspective['id'], 'userid': user['userid'], 'flag': True}
+                            flag = {'perspectiveId': perspective['id'], 'userid': user['userid'], 'flag': True}
                             daoFlags.updateFlag(flag)
 
         elif first_arg == "update_CM":
-            # data = loads(post_data.decode('utf-8'))
+            #data = loads(post_data.decode('utf-8'))
+            data = "1000"
             print("update_CM")
             # <Update Community Model>
             # TODO: Hacer Llamada al Community Model
@@ -118,6 +121,9 @@ class Handler(BaseHTTPRequestHandler):
             # </Update Community Model>
             
             # UPDATE CM 
+            #print("update_CM2")
+            
+            
             
             # Check if there is an update flag
             daoPerspectives = DAO_db_perspectives("localhost", 27018, "spice", "spicepassword")
@@ -127,11 +133,18 @@ class Handler(BaseHTTPRequestHandler):
             for flag in flags:
                 print(flag)
                 perspective = daoPerspectives.getPerspective(flag["perspectiveId"])
-                print("community model start")
-
+                
+                
+                """
+                
                 print("data from post requets: ", post_data)
+                print("data from post requets: ", data)
+                print("type data: ", type(data))
+                """
+                print("\n")
+                print("community model start")
                 # Call to the community model
-                communityModel = CommunityModel(perspective)
+                communityModel = CommunityModel(perspective,flag)
                 communityModel.start()
                 
                 print("community model end")
