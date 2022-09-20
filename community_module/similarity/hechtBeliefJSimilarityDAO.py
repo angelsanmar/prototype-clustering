@@ -14,6 +14,7 @@ HECHT_BELIEFS_J = ['NotTraitor','CantJudge','Traitor']
 class HechtBeliefJSimilarityDAO(SimilarityDAO):
 
     def distance(self,elemA, elemB):
+        #return 0.5
         #print(self.data)
         """Method to obtain the distance between two element.
 

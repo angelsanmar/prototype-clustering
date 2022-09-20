@@ -13,6 +13,7 @@ class HechtDemographicPoliticsSimilarityDAO(SimilarityDAO):
 
         
     def distance(self,elemA, elemB):
+        #return 0.5
         """Method to obtain the distance between two element.
 
         Parameters
@@ -26,19 +27,20 @@ class HechtDemographicPoliticsSimilarityDAO(SimilarityDAO):
         -------
         double
             Distance between the two elements.
-        """        
+        """
         valueA = self.data.loc[elemA]['DemographicPolitics']
         valueB = self.data.loc[elemB]['DemographicPolitics']
         
         indexA = HECHT_POLITICS.index(valueA)
         indexB = HECHT_POLITICS.index(valueB)
         
-        if (indexA == 5):
-            if (indexB == 5):
-                return 0
-            else:
-                return 1
-        
+        if (indexA == 5 and indexB == 5):
+            return 0
+        elif (indexA == 5):
+            return 1
+        elif (indexB == 5):
+            return 1
+
         return (abs(indexA - indexB)) / (len(HECHT_POLITICS) - 2)
        
         

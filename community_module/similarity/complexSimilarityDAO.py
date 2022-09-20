@@ -94,7 +94,6 @@ class ComplexSimilarityDAO(SimilarityDAO):
         complexDistance = complexDistance / complexWeight
         #print("Final distance: " + str(complexDistance))
         
-        
         return complexDistance
         
     def similarity(self,elemA, elemB):

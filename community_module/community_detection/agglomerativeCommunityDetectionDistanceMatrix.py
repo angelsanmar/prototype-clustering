@@ -58,7 +58,8 @@ class AgglomerativeCommunityDetectionDistanceMatrix:
             
             #alg = AgglomerativeClustering(n_clusters=n_clusters, affinity='precomputed', linkage='average')
             result = alg.fit_predict(metric)
-        
+            
+            result2 = alg.fit(metric)
         #print(result)
         """
         #TODO: Llamar a función de similitud y crear la matriz de distancias
@@ -73,6 +74,49 @@ class AgglomerativeCommunityDetectionDistanceMatrix:
         ids_communities = {}
         for i in range(len(self.data.index)):
             ids_communities[self.data.index[i]] = result[i]
+            
+        # https://stackoverflow.com/questions/51729851/distance-between-clusters-kmeans-sklearn-python
+        
+        
+        
+            
+        # Show distances between clusters with the attribute _distances
+        # https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html
+        """
+        print("\n")
+        print("\n")
+        print("\n")
+        print(result)
+        print("\n")
+        print(result2)
+        print("\n")
+        print(result2.distances_)
+        print("\n")
+        print("\n")
+        print("\n")
+        """
+        
+        
+        
+        # Get medoid cluster
+        # https://stats.stackexchange.com/questions/137398/pick-representative-element-from-each-cluster
+        
+        
+        
+        
+        # Get centroids for each of the clusters
+        """
+        print("\n")
+        print("nearest centroids")
+        clf = NearestCentroid()
+        clf.fit(metric,result)
+        print(clf.centroids_)
+        print("\n")
+        """
+        
+        
+        
+        
         
         
         """

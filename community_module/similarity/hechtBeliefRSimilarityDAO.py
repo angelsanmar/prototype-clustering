@@ -12,8 +12,13 @@ HECHT_BELIEFS_R = ['ANatPridePro','BReligousPro','CRealisticPro','DExtremistNeg'
 
 
 class HechtBeliefRSimilarityDAO(SimilarityDAO):
+
+    def distanceTable(beliefA,beliefB):
+        pass
+        
         
     def beliefRDistance(self,beliefA,beliefB):
+        #return 0.5
         # Special case: dont know
         if (beliefA == 'DK' and beliefB == 'DK'):
             return 0

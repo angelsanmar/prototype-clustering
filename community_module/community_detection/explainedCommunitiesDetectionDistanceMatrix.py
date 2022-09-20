@@ -20,7 +20,7 @@ class ExplainedCommunitiesDetectionDistanceMatrix:
         self.data = data
         self.distanceMatrix = distanceMatrix
 
-    def search_all_communities(self, answer_binary=False, percentage=1.0, finishSearchSet = False):
+    def search_all_communities(self, answer_binary=False, percentage=1.0):
         """Method to search all explainable communities.
 
         Args:
@@ -34,7 +34,7 @@ class ExplainedCommunitiesDetectionDistanceMatrix:
             dict: Dictionary where each user is assigned to a community.
         """
         n_communities = 2
-        n_communities = 7
+        #n_communities = 7
         finish_search = False
         
 
@@ -83,10 +83,6 @@ class ExplainedCommunitiesDetectionDistanceMatrix:
                 explainables.append(self.is_explainable(community, answer_binary, percentage))
 
             finish_search = sum(explainables) == n_communities
-            
-            # extra fix for now
-            if finishSearchSet:
-                finish_search = finishSearchSet
 
             if not finish_search:
                 n_communities += 1
