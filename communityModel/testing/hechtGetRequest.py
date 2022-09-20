@@ -45,12 +45,13 @@ def main():
     
     daoC = DAO_db_community("localhost", 27018, "spice", "spicepassword")
     daoC.drop()
-    daoC.dropFullList()
-    daoC.insertCommunity(communities)
+    #daoC.dropFullList()
+    #daoC.insertCommunity(communities)
     
     # Perform a get request
     daoAPI = DAO_api()
-    response = daoAPI.perspectiveCommunities("1000")
+    #response = daoAPI.communityDescription("621e53cf0aa6aa7517c2afdd")
+    response = daoAPI.perspectiveList()
     print(response)
     
     

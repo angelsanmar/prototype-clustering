@@ -32,7 +32,7 @@ def main():
     #--------------------------------------------------------------------------------------------------------------------------
       
     daoU = DAO_db_users("localhost", 27018, "spice", "spicepassword")
-    daoU.drop()
+    #daoU.drop()
     
     daoAPI = DAO_api()
 
