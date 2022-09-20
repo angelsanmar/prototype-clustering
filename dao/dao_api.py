@@ -65,6 +65,11 @@ class DAO_api(DAO):
         return self.data, response
         
     """__API for perspectives__"""
+    def perspectiveList(self):
+        response = requests.get("http://localhost:8080/v1.1/perspectives")
+        self.responseProcessing(response)
+        return self.data, response
+        
     def perspectiveCommunities(self,perspectiveId):
         print( "http://localhost:8080/v1.1/perspectives/{}/communities".format(perspectiveId) )
         response = requests.get("http://localhost:8080/v1.1/perspectives/{}/communities".format(perspectiveId))

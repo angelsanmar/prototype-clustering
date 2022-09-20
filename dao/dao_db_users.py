@@ -8,6 +8,12 @@ from copy import copy, deepcopy
 import pymongo
 from pymongo import MongoClient
 
+"""
+mine
+"""
+import pandas as pd
+import json
+
 
 class DAO_db_users(DAO):
     """
@@ -271,4 +277,11 @@ class DAO_db_users(DAO):
         
         return usersAPI
 
+    """
+        mine
+    """
+    def getPandasDataframe(self):
+        users = self.getUsers()
+        data = json.dumps(users)
 
+        return pd.read_json(data)

@@ -182,14 +182,14 @@ class DAO_db_community(DAO):
         self.drop()
         self.dropFullList()
 
-    def drop(self):
+    def drop(self,dropFilter = {}):
         """
             Mongo DB Drop all documents in db_communities collection
         """
-        self.db_communities.delete_many({})
+        self.db_communities.delete_many(dropFilter)
 
-    def dropFullList(self):
+    def dropFullList(self,dropFilter = {}):
         """
             Mongo DB Drop all documents in db_fullListCommunities collection
         """
-        self.db_fullListCommunities.delete_many({})
+        self.db_fullListCommunities.delete_one(dropFilter)

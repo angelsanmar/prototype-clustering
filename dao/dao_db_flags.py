@@ -48,12 +48,7 @@ class DAO_db_flags(DAO):
         dataList = loads(dumps(list(dataList)))
         return dataList[0]
 
-    def deleteFlag(self, flagJSON):
-        """
-        :Parameters:
-            flagJSON: Flag/s, Type: <class 'dict'> OR List[<class 'dict'>]
-        """
-        self.db_flags.delete_one(flagJSON)
+    
         
 
     def drop(self):
@@ -74,7 +69,7 @@ class DAO_db_flags(DAO):
             self.db_flags.insert_one(temp)
             
     def updateFlag(self, flagJSON):
-        key = {'perspective': flagJSON['perspective'], 'userid': flagJSON['userid']}
+        key = {'perspectiveId': flagJSON['perspectiveId'], 'userid': flagJSON['userid']}
         self.db_flags.update_one(key,{"$set": flagJSON},upsert=True)
  
     def getFlags(self):
@@ -85,11 +80,12 @@ class DAO_db_flags(DAO):
         data = self.db_flags.find({}, {"_id": 0})
         return loads(dumps(list(data)))
         
-    def deleteFlag(self, flagId):
+    def deleteFlag(self, flagJSON):
         """
         :Parameters:
-            flagId: Type: <class 'str'>
+            flagJSON: Flag/s, Type: <class 'dict'> OR List[<class 'dict'>]
         """
-        self.db_flags.delete_one({'id': flagId})
+        self.db_flags.delete_one(flagJSON)
+        #self.db_flags.delete_one({'id': flagId})
         
         
